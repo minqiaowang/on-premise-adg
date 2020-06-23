@@ -6,17 +6,17 @@ A failover is an unplanned event that assumes the primary database is lost. The 
 
 This lab assumes you have already completed the following labs:
 
-- Deploy Active Data Guard with LVM or ASM
+- Deploy Active Data Guard
 - Test with Active Data Guard
 
 ## Step 1: Setup the current primary database flashback on
 
-In the previous lab, you have done the Data Guard switch over. Now, the current primary database is the DBCS and the current standby database in the on-premise database.
+In the previous lab, you have done the Data Guard switch over. Now, the current primary database is the **ORCLSTBY** and the current standby database is the **ORCL**.
 
-1. From the Cloud side. Check the flashback status of the current primary database
+1. From the current primary side. Check the flashback status of the current primary database
 
 ```
-[oracle@dbstby ~]$ sqlplus / as sysdba
+[oracle@standby ~]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Wed Feb 5 05:31:25 2020
 Version 19.7.0.0.0
@@ -82,7 +82,7 @@ Version 19.7.0.0.0
 1. Connect with DGMGRL, validate the primary and standby database
 
 ```
-[oracle@dbstby ~]$ dgmgrl sys/Ora_DB4U@orcl
+[oracle@standby ~]$ dgmgrl sys/Ora_DB4U@orcl
 DGMGRL for Linux: Release 19.0.0.0.0 - Production on Wed Feb 5 05:41:24 2020
 Version 19.7.0.0.0
 
@@ -97,55 +97,62 @@ Configuration - adgconfig
 
   Protection Mode: MaxPerformance
   Members:
-  orcl_nrt1d4 - Primary database
-    orcl        - Physical standby database 
+  orclstby - Primary database
+    orcl     - Physical standby database 
 
 Fast-Start Failover:  Disabled
 
 Configuration Status:
-SUCCESS   (status updated 18 seconds ago)
+SUCCESS   (status updated 56 seconds ago)
 
-DGMGRL> validate database orcl_nrt1d4
+DGMGRL> validate database orclstby
 
   Database Role:    Primary database
 
   Ready for Switchover:  Yes
 
+  Flashback Database Status:
+    orclstby:  Off
+
   Managed by Clusterware:
-    orcl_nrt187:  NO             
-    Validating static connect identifier for the primary database orcl_nrt187...
-    The static connect identifier allows for a connection to database "orcl_nrt187".
+    orclstby:  NO             
+    Validating static connect identifier for the primary database orclstby...
+    The static connect identifier allows for a connection to database "orclstby".
 
 DGMGRL> validate database orcl
 
   Database Role:     Physical standby database
-  Primary Database:  orcl_nrt1d4
+  Primary Database:  orclstby
 
   Ready for Switchover:  Yes
   Ready for Failover:    Yes (Primary Running)
 
+  Flashback Database Status:
+    orclstby:  Off
+    orcl    :  On
+
   Managed by Clusterware:
-    orcl_nrt1d4:  NO             
-    orcl       :  NO             
-    Validating static connect identifier for the primary database orcl_nrt1d4...
-    The static connect identifier allows for a connection to database "orcl_nrt1d4".
+    orclstby:  NO             
+    orcl    :  NO             
+    Validating static connect identifier for the primary database orclstby...
+    The static connect identifier allows for a connection to database "orclstby".
 
   Log Files Cleared:
-    orcl_nrt187 Standby Redo Log Files:  Cleared
-    orcl Online Redo Log Files:          Not Cleared
-    orcl Standby Redo Log Files:         Available
+    orclstby Standby Redo Log Files:  Cleared
+    orcl Online Redo Log Files:       Not Cleared
+    orcl Standby Redo Log Files:      Available
 
   Current Log File Groups Configuration:
     Thread #  Online Redo Log Groups  Standby Redo Log Groups Status       
-              (orcl_nrt1d4)           (orcl)                               
-    1         3                       2                       Insufficient SRLs
+              (orclstby)              (orcl)                               
+    1         3                       1                       Insufficient SRLs
 
   Future Log File Groups Configuration:
     Thread #  Online Redo Log Groups  Standby Redo Log Groups Status       
-              (orcl)                  (orcl_nrt1d4)                        
+              (orcl)                  (orclstby)                           
     1         3                       2                       Insufficient SRLs
 
-DGMGRL>  
+DGMGRL> 
 ```
 
 2. Failover to current standby.
@@ -160,26 +167,26 @@ Configuration - adgconfig
 
   Protection Mode: MaxPerformance
   Members:
-  orcl        - Primary database
-    orcl_nrt1d4 - Physical standby database (disabled)
+  orcl     - Primary database
+    orclstby - Physical standby database (disabled)
       ORA-16661: the standby database needs to be reinstated
 
 Fast-Start Failover:  Disabled
 
 Configuration Status:
-SUCCESS   (status updated 13 seconds ago)
+SUCCESS   (status updated 114 seconds ago)
 
 DGMGRL> 
 ```
 
-Now, the primary is the on-premise database, and the standby database is disabled, which needs to be reinstated.
+Now, the primary is the back to the **ORCL** database, and the standby database is disabled, which needs to be reinstated.
 
 ## Step 3: Reinstate the previous primary database
 
-1. In cloud side(the previous primary), connect to sqlplus as sysdba, shutdown the database and startup mount before reinstating. 
+1. In the previous primary side, connect to sqlplus as sysdba, shutdown the database and startup mount before reinstating. 
 
 ```
-[oracle@dbstby ~]$ sqlplus / as sysdba  
+[oracle@standby ~]$ sqlplus / as sysdba  
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Wed Feb 5 05:48:11 2020
 Version 19.7.0.0.0
@@ -207,15 +214,24 @@ Database mounted.
 SQL> exit
 Disconnected from Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
 Version 19.7.0.0.0
-[oracle@dbstby ~]$  
+[oracle@standby ~]$  
 ```
 
-2. Reinstate the database, replace `ORCL_nrt1d4` with your previous primary db unique name.
+2. Reinstate the database.
 
 ```
-DGMGRL> reinstate database orcl_nrt1d4
-Reinstating database "orcl_nrt1d4", please wait...
-Reinstatement of database "orcl_nrt1d4" succeeded
+[oracle@standby ~]$ dgmgrl sys/Ora_DB4U@orcl
+DGMGRL for Linux: Release 19.0.0.0.0 - Production on Tue Jun 23 06:06:36 2020
+Version 19.7.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+
+Welcome to DGMGRL, type "help" for information.
+Connected to "ORCL"
+Connected as SYSDBA.
+DGMGRL> reinstate database orclstby
+Reinstating database "orclstby", please wait...
+Reinstatement of database "orclstby" succeeded
 DGMGRL> show configuration
 
 Configuration - adgconfig
@@ -223,7 +239,7 @@ Configuration - adgconfig
   Protection Mode: MaxPerformance
   Members:
   orcl        - Primary database
-    orcl_nrt1d4 - Physical standby database 
+    orclstby - Physical standby database 
 
 Fast-Start Failover:  Disabled
 
@@ -236,7 +252,7 @@ DGMGRL>
 3. Check the status of the new standby database
 
 ```
-[oracle@dbstby ~]$ sqlplus / as sysdba
+[oracle@standby ~]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Wed Feb 5 05:53:48 2020
 Version 19.7.0.0.0

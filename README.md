@@ -2,14 +2,10 @@
 
 Oracle’s Maximum Availability Architecture (Oracle MAA) is the best practices blueprint for data protection and availability for Oracle databases deployed on private, public or hybrid clouds. Data Guard and Active Data Guard provide disaster recovery (DR) for databases with recovery time objectives (RTO) that cannot be met by restoring from backup. Customers use these solutions to deploy one or more synchronized replicas (standby databases) of a production database (the primary database) in physically separate locations to provide high availability, comprehensive data protection, and disaster recovery for mission-critical data. 
 
-An effective disaster recovery plan can be costly due to the need to establish, equip and manage a remote data center. The Oracle Cloud offers a great alternative for hosting standby databases for customers who do not have a DR site or who prefer not to deal with the cost or complexity of managing a remote data center. Existing production databases remain on-premises and standby databases used for DR are deployed on the Oracle Cloud. This mode of deployment is commonly referred to as a hybrid cloud implementation. 
+
 
 ## Workshops
-Click on one of our workshops below to access the content.
-
-
-- [I have a Freetier or Oracle Cloud account](https://minqiaowang.github.io/hybrid-adg/freetier/index.html)
-- [I have an account on LiveLabs](https://minqiaowang.github.io/hybrid-adg/livelabs/index.html)
+Click [here](https://minqiaowang.github.io/on-premise-adg/workshop/index.html) to access the content.
 
 
 ## Get an Oracle Cloud Trial Account for Free!
