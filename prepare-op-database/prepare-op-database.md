@@ -6,14 +6,13 @@ In this lab, You will use the compute instances in the OCI to simulate the on-pr
 
 This lab assumes you have completed the following labs:
 
-* Register for Free Tier
 * Generate SSH Key
 * Environment Setup for multiple users
 
 You will be assigned with 2 VM hosts:
 
-- `primary**`: The primary database host name and ip, DB unique name **ORCL**, SID is **ORCL**
-- `standby**`: The primary database host name and ip, DB unique name **ORCLSTBY**, SID is **ORCL**
+- `primary**`: The primary database host, DB unique name **ORCL**, SID is **ORCL**
+- `standby**`: The standby database host, DB unique name **ORCLSTBY**, SID is **ORCL**
 
 
 

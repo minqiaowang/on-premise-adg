@@ -199,7 +199,7 @@ Version 19.7.0.0.0
 [oracle@standby ~]$ 
 ```
 
-2. From the primary side, connect to orclpdb as testuser. Check the records in the test table.
+2. From the primary side, connect to orclpdb as **testuser**. Check the records in the test table.
 
 ```
 SQL> select * from test;
@@ -212,14 +212,14 @@ SQL> select * from test;
 SQL> exit
 Disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
 Version 19.7.0.0.0
-[oracle@adgstudent1 ~]$ 
+[oracle@primary ~]$ 
 ```
 
 
 
 ## Step 3: Switchover to the Cloud 
 
-At any time, you can manually execute a Data Guard switchover (planned event) or failover (unplanned event). Customers may also choose to automate Data Guard failover by configuring Fast-Start failover. Switchover and failover reverse the roles of the databases in a Data Guard configuration – the standby in the cloud becomes primary and the original on-premise primary becomes a standby database. Refer to Oracle MAA Best Practices for additional information on Data Guard role transitions. 
+At any time, you can manually execute a Data Guard switchover (planned event) or failover (unplanned event). Customers may also choose to automate Data Guard failover by configuring Fast-Start failover. Switchover and failover reverse the roles of the databases in a Data Guard configuration – the standby database becomes primary and the original primary becomes the standby database. Refer to Oracle MAA Best Practices for additional information on Data Guard role transitions. 
 
 Switchovers are always a planned event that guarantees no data is lost. To execute a switchover, perform the following in Data Guard Broker 
 
@@ -303,7 +303,7 @@ SUCCESS   (status updated 65 seconds ago)
 DGMGRL> exit
 ```
 
-3. Check from the primary side. You can see the previous primary side becomes the new standby side.
+3. Check from the original primary side. You can see the previous primary side becomes the new standby side.
 
 ```
 [oracle@primary ~]$ sqlplus / as sysdba
@@ -333,7 +333,7 @@ READ ONLY WITH APPLY PHYSICAL STANDBY
 SQL> 
 ```
 
-4. Check from the standby side. You can see it's becomes the new primary side.
+4. Check from the original standby side. You can see it's becomes the new primary side.
 
 ```
 [oracle@standby ~]$ sqlplus / as sysdba

@@ -132,7 +132,7 @@ Version 19.7.0.0.0
 
 ## Step 2: Copy the Password File to the standby host 
 
-As **oracle** user, copy the on-premise database password file to cloud host `$ORACLE_HOME/dbs` directory. 
+As **oracle** user, copy the primary database password file to the standby host `$ORACLE_HOME/dbs` directory. 
 
 1. Copy the following command, change the `primary**` to the primary hostname or public ip.
 
@@ -154,9 +154,9 @@ orapwORCL 100% 2048    63.5KB/s   00:00
 
 A static listener is needed for initial instantiation of a standby database. The static listener enables remote connection to an instance while the database is down in order to start a given instance. See MOS 1387859.1 for additional details.  A static listener for Data Guard Broker is optional. 
 
-1. From primary side
+1. From the primary side
 
-   - Switch to the **oracle** user, edit listener.ora
+   - Switch to the **oracle** user, edit `listener.ora`
 
    ```
    <copy>vi $ORACLE_HOME/network/admin/listener.ora</copy>
@@ -196,9 +196,9 @@ SID_LIST_LISTENER=
    [oracle@primary ~]$ 
    ```
 
-2. From standby side
+2. From the standby side
 
-   - Switch to the **oracle** user, edit listener.ora
+   - Switch to the **oracle** user, edit `listener.ora`
 
    ```
    <copy>vi $ORACLE_HOME/network/admin/listener.ora</copy>
@@ -238,7 +238,7 @@ SID_LIST_LISTENER=
    [oracle@standby ~]$ 
    ```
 
-3. Mount the Standby database.
+3. Mount the standby database.
 
 ```
 [oracle@standby ~]$ sqlplus / as sysdba
@@ -269,7 +269,7 @@ Version 19.7.0.0.0
 
 ## Step 4: TNS Entries for Redo Transport 
 
-1. From primary side, switch as **oracle** user, edit the tnsnames.ora
+1. From the primary side, switch as **oracle** user, edit the `tnsnames.ora`
 
 ```
 <copy>vi $ORACLE_HOME/network/admin/tnsnames.ora</copy>
@@ -294,7 +294,7 @@ ORCLSTBY =
   )
 ```
 
-2. From the standby side, switch as **oracle** user, edit the tnsnames.ora
+2. From the standby side, switch as **oracle** user, edit the `tnsnames.ora`
 
 ```
 vi $ORACLE_HOME/network/admin/tnsnames.ora
@@ -508,6 +508,7 @@ RMAN> exit
 
 
 Recovery Manager complete.
+
 [oracle@standby ~]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Sat Feb 1 11:16:31 2020
@@ -531,7 +532,7 @@ SQL>
 
 
 
-## Step 7: Clear all online and standby redo logs 
+## Step 6: Clear all online and standby redo logs 
 
 1. Copy the following command.
 
@@ -570,7 +571,7 @@ SQL>
 
 
 
-## Step 8: Configure Data Guard broker
+## Step 7: Configure Data Guard broker
 
 1. Copy the following command.
 
@@ -585,7 +586,7 @@ SQL>
 
    
 
-2. Run the command on primary and standby database to enable the data guard broker.
+2. Run the command on the primary and the standby database to enable the data guard broker.
 
 - From the primary side,
 
@@ -647,7 +648,7 @@ DMON
 SQL> 
 ```
 
-3. Register the database via DGMGRL. From the primary side.
+3. Register the database via DGMGRL. 
 
 ```
 [oracle@primary ~]$ dgmgrl sys/Ora_DB4U@ORCL

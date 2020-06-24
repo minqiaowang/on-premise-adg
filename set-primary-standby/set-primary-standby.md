@@ -1,6 +1,6 @@
 # Set connectivity between on-premise host and cloud host
 
-In a Data Guard configuration, information is transmitted in both directions between primary and standby databases. This requires basic configuration, network tuning and opening of ports at both primary and standby databases. 
+In a Data Guard configuration, information is transmitted in both directions between the primary and standby databases. This requires basic configuration, network tuning and opening of ports at both primary and standby databases. 
 
 ##Lab Prerequisites
 
@@ -18,7 +18,7 @@ In this Lab, you can use 2 terminal windows, one connected to the primary host, 
    ssh -i labkey opc@xxx.xxx.xxx.xxx
    ```
 
-2. Copy and run the following command to open the 1521 port in both side.
+2. Copy and run the following command to open the 1521 port on both side.
 
    ```
    <copy>
@@ -32,7 +32,7 @@ In this Lab, you can use 2 terminal windows, one connected to the primary host, 
 
 ## Step 2: Enable ssh connect for the oracle user
 
-1. Work as opc user, edit the ssh configure file in both side
+1. Work as opc user, edit the ssh configure file on both side
 
 ```
 <copy>sudo vi /etc/ssh/sshd_config</copy>
@@ -87,7 +87,7 @@ ssh -i labkey opc@xxx.xxx.xxx.xxx
 <copy>sudo yum -y install telnet</copy>
 ```
 
-   - From the primary side, telnet the public ip or hostname of the standby host, enter `^]` and return to exist. 
+   - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exist. 
 
     ```
      $ telnet standby** 1521
@@ -101,7 +101,7 @@ ssh -i labkey opc@xxx.xxx.xxx.xxx
      $ 
      ```
 
-   - From the standby side, telnet the public ip or hostname of the primary host, enter `^]` and return to exist. 
+   - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exist. 
 
     ```
      $ telnet primary** 1521
@@ -168,7 +168,7 @@ sysctl: reading key "net.ipv6.conf.lo.stable_secret"
 
 ## Step 5: Prompt-less SSH configure
 
-Now you will configure the prompt-less ssh for oracle users between on-premise and the cloud.
+Now you will configure the prompt-less ssh for oracle users between the primary and the standby.
 
 1. su to **oracle** user in both side.
 
@@ -178,7 +178,7 @@ Now you will configure the prompt-less ssh for oracle users between on-premise a
 
 2. Configure prompt-less ssh from the primary to the standby.
 
-     - From primary side, generate the ssh key, and cat the public key, copy all the content in the id_rsa.pub
+     - From the primary side, generate the ssh key, and cat the public key, copy all the content in the id_rsa.pub
 
      ```
      [oracle@primary ~]$ ssh-keygen -t rsa
@@ -223,7 +223,7 @@ Now you will configure the prompt-less ssh for oracle users between on-premise a
 
        
 
-     - From primary side, test the connection from primary to standby, using the public ip or hostname of the standby hosts.
+     - From primary side, test the connection from the primary to the standby, using the public ip or hostname of the standby hosts.
 
      ```
      [oracle@primary ~]$ ssh oracle@standby** echo Test success
@@ -236,9 +236,9 @@ Now you will configure the prompt-less ssh for oracle users between on-premise a
      [oracle@primary ~]$ 
      ```
 
-3. Configure prompt-less ssh from standby to primary.
+3. Configure prompt-less ssh from the standby to primary.
 
-     - From standby side, generate the ssh key, and cat the public key, copy all the content in the id_rsa.pub.
+     - From the standby side, generate the ssh key, and cat the public key, copy all the content in the id_rsa.pub.
 
      ```
      [oracle@standby ~]$ ssh-keygen -t rsa
@@ -267,7 +267,7 @@ Now you will configure the prompt-less ssh for oracle users between on-premise a
      [oracle@standby ~]$ 
      ```
 
-     - From primary side, edit the `authorized_keys` file, copy all the content in the `id_rsa.pub` into it, save and close
+     - From the primary side, edit the `authorized_keys` file, copy all the content in the `id_rsa.pub` into it, save and close
 
      ```
      <copy>vi .ssh/authorized_keys</copy>
@@ -279,7 +279,7 @@ Now you will configure the prompt-less ssh for oracle users between on-premise a
      <copy>chmod 600 .ssh/authorized_keys</copy>
      ```
 
-     - From standby side, test the connection from standby to primary, using the public ip or hostname of the primary hosts.
+     - From the standby side, test the connection from standby to primary, using the public ip or hostname of the primary hosts.
 
      ```
      [oracle@standby ~]$ ssh oracle@primary** echo Test success

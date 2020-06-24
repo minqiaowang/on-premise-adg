@@ -18,7 +18,7 @@ This lab assumes you have already completed the following labs:
 Click on the link below to download the Resource Manager zip files you need to build your enviornment.
 
 - [db19c-primary-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-compute/db19c-primary-num.zip) - Packaged terraform primary database instance creation script
-- [db19c-standby-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-compute/db19c-product-num.zip) - Packaged terraform standby database instance creation script
+- [db19c-standby-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-compute/db19c-standby-num.zip) - Packaged terraform standby database instance creation script
 
 
 
@@ -174,9 +174,9 @@ Choose the environment where you created your ssh-key in the previous lab (Gener
 
 8.  Click Open to begin your session with the instance.
 
-## Step 5: Verify the ORCL Database is Up
+## Step 5: Verify the Database is Up
 
-1.  From your connected session of choice **tail** the **buildsingle.log** file. This file has the configures log of the database.
+1.  From your connected session of choice **tail** the `buildsingle.log` file. This file has the configures log of the database.
 
     ````
     <copy>

@@ -1,6 +1,6 @@
 # Failover and Reinstate
 
-A failover is an unplanned event that assumes the primary database is lost. The standby database is converted to a primary database immediately. A failover might result in some data loss when you use **Maximum Performance** protection mode. After a failover the old primary database must be reinstated as a physical standby which is made simpler with flashback database and Data Guard broker enabled. To execute a failover and reinstatement execute the following commands in Data Guard Broker. 
+A failover is an unplanned event that assumes the primary database is lost. The standby database is converted to a primary database immediately. A failover might result in some data loss when you use **Maximum Performance** protection mode. After a failover the old primary database must be reinstated as a physical standby which is made simpler with flashback database and Data Guard broker enabled. 
 
 ## Lab Prerequisites
 
@@ -193,7 +193,7 @@ Now, the primary is the back to the **ORCL** database, and the standby database 
 
 ## Step 3: Reinstate the previous primary database
 
-1. In the previous primary side, connect to sqlplus as sysdba, shutdown the database and startup mount before reinstating. 
+1. In the current standby side, connect to sqlplus as sysdba, shutdown the database and startup mount before reinstating. 
 
 ```
 [oracle@standby ~]$ sqlplus / as sysdba  
