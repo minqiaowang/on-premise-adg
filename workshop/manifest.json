@@ -25,7 +25,7 @@
             "filename": "https://raw.githubusercontent.com/oracle/learning-library/master/common/labs/generate-ssh-key/generate-ssh-keys.md"
         },
         {            
-            "title": "Lab 3: Environment Setup",
+            "title": "Lab 3: Environment Setup For Multiple Users",
             "description": "Setup compute instance running 19c using Terraform script and Resource Manager",
             "publisheddate": "3/24/2020",
             "filename": "../setup-compute/setup-19c-compute-197.md"

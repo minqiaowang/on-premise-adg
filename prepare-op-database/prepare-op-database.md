@@ -8,12 +8,12 @@ This lab assumes you have completed the following labs:
 
 * Register for Free Tier
 * Generate SSH Key
-* Environment Setup
+* Environment Setup for multiple users
 
 You will be assigned with 2 VM hosts:
 
-- primary: The primary database host name and ip, instance name **ORCL**
-- standby: The primary database host name and ip, instance name **ORCLSTBY**
+- `primary**`: The primary database host name and ip, DB unique name **ORCL**, SID is **ORCL**
+- `standby**`: The primary database host name and ip, DB unique name **ORCLSTBY**, SID is **ORCL**
 
 
 

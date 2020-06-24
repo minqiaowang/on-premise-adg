@@ -2,21 +2,7 @@
 
 ## Introduction
 
-This lab will show you how to setup a Oracle Cloud network (VCN) and the compute instance running a pre-configured Oracle Database 19c install using Oracle Resource Manager and Terraform. You can setup the primary and standby database using the related scripts.
-
-### About Terraform and Oracle Cloud Resource Manager
-
-Terraform is a tool for building, changing, and versioning infrastructure safely and efficiently.  Configuration files describe to Terraform the components needed to run a single application or your entire datacenter.  In this lab a configuration file has been created for you to build network and compute components.  The compute component you will build creates an image out of Oracle's Cloud Marketplace.  This image is running Oracle Database 19c.
-
-Resource Manager is an Oracle Cloud Infrastructure service that allows you to automate the process of provisioning your Oracle Cloud Infrastructure resources. Using Terraform, Resource Manager helps you install, configure, and manage resources through the "infrastructure-as-code" model. To learn more about OCI Resource Manager, take a watch the video below.
-
-[](youtube:udJdVCz5HYs)
-
-### Oracle Cloud Marketplace
-
-The Oracle Cloud Marketplace is a catalog of solutions that extends Oracle Cloud services.  It offers multiple consumption modes and deployment modes.  In this lab we will be deploying the free Oracle Database 19c marketplace image.
-
-Link to Marketplace - https://www.oracle.com/cloud/marketplace/
+This lab will show you how to setup a Oracle Cloud network (VCN) and the compute instance running a pre-configured Oracle Database 19c install using Oracle Resource Manager and Terraform. You can setup the primary and standby database using the related scripts. The primary and the standby database are in different VCN. You can prepare multiple primary and standby database for students before the workshop.
 
 ### Objectives
 
@@ -34,11 +20,9 @@ Click on the link below to download the Resource Manager zip files you need to b
 - [db19c-primary-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-compute/db19c-primary-num.zip) - Packaged terraform primary database instance creation script
 - [db19c-standby-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-compute/db19c-product-num.zip) - Packaged terraform standby database instance creation script
 
-### Estimated Time
 
-This lab takes approximately 30 minutes to complete.
 
-## Step 1: Prepare the Primary Database Environment
+## Step 1: Prepare the Primary Database
 
 3.  Open up the hamburger menu in the left hand corner. Choose **Resource Manager > Stacks**. Choose the **Compartment** that you want to use, click the  **Create Stack** button. *Note: If you are in a workshop, double check your region to ensure you are on the assigned region.*
 
@@ -245,7 +229,7 @@ Choose the environment where you created your ssh-key in the previous lab (Gener
     </copy>
     ````
 
-7.  Copy and paste the below command to exit from oracle user and become an `opc` user.
+7.  Copy and paste the below command to exit from oracle user and become an **opc** user.
 
     ````
     <copy>
@@ -253,12 +237,12 @@ Choose the environment where you created your ssh-key in the previous lab (Gener
     </copy>
     ````
 
-Congratulations! You now have a fully functional Oracle Database 19c instance (ORCL) running on Oracle Cloud Compute, the default pdb name is **orclpdb**.
+You now have a fully functional Oracle Database 19c instance **ORCL** running on Oracle Cloud Compute, the default pdb name is **orclpdb**.
 
 ## Step 6: Prepare the standby database
 
 Repeat from the Step 1 to Step 5 to prepare the standby database. This time please choose the db19c-standby-num.zip file in the Resource Manager. And you can choose another region and compartment for the standby database.
 
-After complete, you have a standby database that SID is **ORCL** same with the primary database and the DB_UNIQUE_NAME is **ORCLSTBY**, the default pdb name is also **orclpdb**.
+After complete, you have a standby database that SID is **ORCL**, same as the primary database and the DB_UNIQUE_NAME is **ORCLSTBY**, the default pdb name is also named **orclpdb**.
 
 

@@ -53,6 +53,16 @@ Variable Size		 2080374784 bytes
 Database Buffers	 1.3992E+10 bytes
 Redo Buffers		   24399872 bytes
 Database mounted.
+
+SQL> !mkdir -p /u01/app/oracle/fra/ORCL
+SQL> ALTER SYSTEM SET DB_RECOVERY_FILE_DEST_SIZE = 10G SCOPE=BOTH;
+
+System altered.
+
+SQL> ALTER SYSTEM SET DB_RECOVERY_FILE_DEST = '/u01/app/oracle/fra/ORCL' SCOPE=BOTH;
+
+System altered.
+
 SQL> alter database flashback on;
 
 Database altered.
@@ -246,7 +256,7 @@ Fast-Start Failover:  Disabled
 Configuration Status:
 SUCCESS   (status updated 21 seconds ago)
 
-DGMGRL> 
+DGMGRL> exit
 ```
 
 3. Check the status of the new standby database
