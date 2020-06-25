@@ -7,7 +7,6 @@ During this Lab, You will learn how to setup Active Data Guard. You will using a
 In a Data Guard configuration, the primary and standby must be able to communicate bi-directionally. This requires additional network configuration to allow access to ports between the hosts. 
 
 
-
 ## Acknowledgements
 
 - **Authors/Contributors** - Minqiao Wang, DB Product Management, June 2020

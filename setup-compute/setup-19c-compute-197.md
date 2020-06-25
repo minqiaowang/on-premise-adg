@@ -11,8 +11,8 @@ This lab will show you how to setup a Oracle Cloud network (VCN) and the compute
 
 ### Lab Prerequisites
 
-This lab assumes you have already completed the following labs:
-- Login to Oracle Cloud
+This lab assumes you have already completed the following:
+- Have Oracle Cloud Account
 - Create SSH Keys
 
 Click on the link below to download the Resource Manager zip files you need to build your enviornment.
@@ -176,7 +176,7 @@ Choose the environment where you created your ssh-key in the previous lab (Gener
 
 ## Step 5: Verify the Database is Up
 
-1.  From your connected session of choice **tail** the `buildsingle.log` file. This file has the configures log of the database.
+1.  From your connected session of choice **tail** the `buildsingle.log` or `buildsingle1.log` file. This file has the configures log of the database.
 
     ````
     <copy>
