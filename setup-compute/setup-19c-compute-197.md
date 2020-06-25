@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This lab will show you how to setup a Oracle Cloud network (VCN) and the compute instance running a pre-configured Oracle Database 19c install using Oracle Resource Manager and Terraform. You can setup the primary and standby database using the related scripts. The primary and the standby database are in different VCN. You can prepare multiple primary and standby database for students before the workshop.
+In this workshop, you will use the compute instances in the Oracle Cloud to simulate the on-premise primary and standby database. This lab will show you how to setup a Oracle Cloud network (VCN) and the compute instance running a pre-configured Oracle Database 19c install using Oracle Resource Manager and Terraform. You can setup the primary and standby database using the related scripts. The primary and the standby database are in different VCN. You can prepare multiple primary and standby database for students before the workshop.
 
 ### Objectives
 
