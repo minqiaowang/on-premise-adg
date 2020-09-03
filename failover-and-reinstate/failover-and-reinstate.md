@@ -152,16 +152,6 @@ DGMGRL> validate database orcl
     orcl Online Redo Log Files:       Not Cleared
     orcl Standby Redo Log Files:      Available
 
-  Current Log File Groups Configuration:
-    Thread #  Online Redo Log Groups  Standby Redo Log Groups Status       
-              (orclstby)              (orcl)                               
-    1         3                       1                       Insufficient SRLs
-
-  Future Log File Groups Configuration:
-    Thread #  Online Redo Log Groups  Standby Redo Log Groups Status       
-              (orcl)                  (orclstby)                           
-    1         3                       2                       Insufficient SRLs
-
 DGMGRL> 
 ```
 
