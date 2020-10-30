@@ -256,6 +256,7 @@ SUCCESS   (status updated 21 seconds ago)
 
 DGMGRL> exit
 ```
+If you encounter the Warning: ORA-16809: multiple warnings detected for the member. Wait some time and show configuration again.
 
 3. Check the status of the new standby database
 

@@ -363,7 +363,7 @@ There are several ways to check the lag between the primary and standby.
 7. Check lag using Data Guard Broker.
 
    ```
-   [oracle@dbcs0 ~]$ dgmgrl sys/Ora_DB4U@orcl
+   [oracle@standby ~]$ dgmgrl sys/Ora_DB4U@orcl
    DGMGRL for Linux: Release 19.0.0.0.0 - Production on Sat Sep 5 07:25:52 2020
    Version 19.7.0.0.0
    

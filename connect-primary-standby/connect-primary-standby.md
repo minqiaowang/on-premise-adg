@@ -76,13 +76,13 @@ AllowUsers opc
     - From the primary side, add the standby host **public ip** and host name in the file like the following:
 
     ```
-    xxx.xxx.xxx.xxx  standby
+    xxx.xxx.xxx.xxx  standby.subnet1.standbyvcn.oraclevcn.com standby
     ```
     
     - From the standby side, add the primary host **public ip** and host name in the file like the following:
 
     ```
-    xxx.xxx.xxx.xxx primary
+    xxx.xxx.xxx.xxx primary.subnet1.primaryvcn.oraclevcn.com primary
     ```
 
 2. Validate the connectivity, install telnet on both sides.
