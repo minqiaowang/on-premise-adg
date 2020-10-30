@@ -91,7 +91,7 @@ AllowUsers opc
 <copy>sudo yum -y install telnet</copy>
 ```
 
-    - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exist. 
+    - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exit. 
 
     ```
      $ telnet standby 1521
@@ -105,7 +105,7 @@ AllowUsers opc
      $ 
      ```
 
-    - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exist. 
+    - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exit. 
 
     ```
      $ telnet primary 1521
