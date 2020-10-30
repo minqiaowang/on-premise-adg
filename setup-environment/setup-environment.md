@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this lab you will show setup a Oracle Cloud network (VCN) and the compute instance with a pre-configured Oracle Database 19c using Oracle Resource Manager and Terraform. You can setup the primary and standby database using the related scripts. The primary and the standby database are in different VCN. You can setup primary and standby database in the same region or in different region.
+In this lab you will setup 2 Oracle Cloud network (VCNs) and 2 compute instances with a pre-configured Oracle Database 19c using Oracle Resource Manager and Terraform. One simulate the primary site and another simulate the standby site. You can setup the primary and standby database using the related scripts. The primary and the standby database are in different VCN. You can setup primary and standby database in the same region or in different region.
 
 Estimated Lab Time: 60 minutes.
 
@@ -18,8 +18,8 @@ This lab assumes you have already completed the following:
 
 Click on the link below to download the Resource Manager zip files you need to build your enviornment.
 
-- [db19c-primary-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-compute/db19c-primary-num.zip) - Packaged terraform primary database instance creation script
-- [db19c-standby-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-compute/db19c-standby-num.zip) - Packaged terraform standby database instance creation script
+- [db19c-primary-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-environment/db19c-primary-num.zip) - Packaged terraform primary database instance creation script
+- [db19c-standby-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-environment/db19c-standby-num.zip) - Packaged terraform standby database instance creation script
 
 
 
