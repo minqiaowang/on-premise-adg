@@ -39,13 +39,8 @@ Click on the link below to download the Resource Manager zip files you need to b
 
     ![](images/image-20201030094139692.png)
 
-    Enter the following information. Accept all the defaults and click **Next**.
+    Accept all the defaults and click **Next**.
 
-    - **Name**:  Enter your name of the stack. *(Do not enter any special characters here, including periods, underscores, exclamation etc, it will mess up the configuration and you will get an error during the apply process.)*
-
-    - **Description**:  Same as above
-
-    - **Compartment**:  Accept the default or change to the correct compartment.
 
 3. Accept the default value of the `Instance_Shape`. Paste the content of the public key you create before to the `SSH_PUBLIC_KEY`,  and click **Next**. 
 
@@ -89,7 +84,7 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
 
     ![](./images/step3.1-applyjob3.png " ")
 
-2.  Once this job succeeds, you will get an apply complete notification from Terraform.  Examine it closely, 1 resource has been added. In the end of the apply log,  you can get the **public ip address** of the primary instance. Congratulations, your environment is created! Time to login to your instance to finish the configuration.
+2.  Once this job succeeds, you will get an apply complete notification from Terraform.  In the end of the apply log,  you can get the **public ip address** of the primary instance. Congratulations, your environment is created! Time to login to your instance to finish the configuration.
 
     ![](images/image-20201030100144873.png)
 
@@ -97,17 +92,13 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
 
 ### MAC or Windows CYGWIN Emulator
 
-1.  Go to **Compute** -> **Instances** and select the instance you created (make sure you choose the correct compartment).
-
-2.  On the instance homepage, find the Public IP addresss for your instance.
-
-3.  Open up a terminal (MAC) or cygwin emulator as the opc user.  Enter yes when prompted.
+1.  Open up a terminal (MAC) or cygwin emulator as the opc user.  Enter yes when prompted.
 
     ````
     ssh -i ~/.ssh/optionskey opc@<Your Compute Instance Public IP Address>
     ````
 
-4. After successfully logging in, proceed to Step 5.
+2. After successfully logging in, proceed to Step 5.
 
     ```
     ssh -i labkey opc@xxx.xxx.xxx.xxx
