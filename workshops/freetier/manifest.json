@@ -28,7 +28,7 @@
         },
         {            
             "title": "Lab 5: Testing with Active Data Guard",
-            "filename": "../..test-with-adg/test-with-adg.md"
+            "filename": "../../test-with-adg/test-with-adg.md"
         },
         {            
             "title": "Lab 6: Failover and Reinstate",
