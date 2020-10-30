@@ -146,16 +146,16 @@ Version 19.7.0.0.0
 
 As **oracle** user, copy the primary database password file to the standby host `$ORACLE_HOME/dbs` directory. 
 
-1. Copy the following command, change the `primary**` to the primary hostname or public ip.
+1. Copy the following command.
 
 ```
-<copy>scp oracle@primary**:/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL $ORACLE_HOME/dbs</copy>
+<copy>scp oracle@primary:/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL $ORACLE_HOME/dbs</copy>
 ```
 
 2. Run the command as **oracle** user.
 
 ```
-[oracle@standby ~]$ scp oracle@primary**:/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL $ORACLE_HOME/dbs
+[oracle@standby ~]$ scp oracle@primary:/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL $ORACLE_HOME/dbs
 orapwORCL 100% 2048    63.5KB/s   00:00    
 [oracle@standby ~]$
 ```
@@ -287,7 +287,7 @@ Version 19.7.0.0.0
 <copy>vi $ORACLE_HOME/network/admin/tnsnames.ora</copy>
 ```
 
-Add following lines into tnsnames.ora, replace `standby**` with the public ip or hostname of the standby hosts.
+Add following lines into tnsnames.ora. Save the file.
 
 ```
 ORCLSTBY =
@@ -296,7 +296,7 @@ ORCLSTBY =
    (RECV_BUF_SIZE=134217728)
    (SEND_BUF_SIZE=134217728)
    (ADDRESS_LIST =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = standby**)(PORT = 1521))
+    (ADDRESS = (PROTOCOL = TCP)(HOST = standby)(PORT = 1521))
    )
     (CONNECT_DATA =
       (SERVER = DEDICATED)
@@ -312,7 +312,7 @@ ORCLSTBY =
 vi $ORACLE_HOME/network/admin/tnsnames.ora
 ```
 
-Add the ORCL description, replace `primary**` with the public ip or hostname of the primary hosts.  It's looks like the following.  
+Add the ORCL description to primary.  It's looks like the following. Save the file.  
 
 ```
 ORCL =
@@ -321,7 +321,7 @@ ORCL =
    (RECV_BUF_SIZE=134217728)
    (SEND_BUF_SIZE=134217728)
    (ADDRESS_LIST =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = primary**)(PORT = 1521))
+    (ADDRESS = (PROTOCOL = TCP)(HOST = primary)(PORT = 1521))
    )
     (CONNECT_DATA =
       (SERVER = DEDICATED)
@@ -352,7 +352,7 @@ mkdir: cannot create directory '/u01/app/oracle/oradata/ORCLSTBY/pdbseed': File 
    alter system set db_file_name_convert='/u01/app/oracle/oradata/ORCL','/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
    alter system set db_create_online_log_dest_1='/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
    alter system set log_file_name_convert='/u01/app/oracle/oradata/ORCL','/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
-   alter system set db_name='ORCL' scope=spfile;
+   alter system set db_name=ORCL scope=spfile;
    alter system set db_unique_name=ORCLSTBY scope=spfile;
    </copy>
    ```

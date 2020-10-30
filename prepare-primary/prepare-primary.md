@@ -13,7 +13,6 @@ Estimated Lab Time: 30 minutes.
 ### Prerequisites
 This lab assumes you have completed the following labs:
 
-- Generate SSH Key
 - Environment Setup for Primary and Standby
 
 Now you have 2 VM hosts:

@@ -1,7 +1,7 @@
 # Set connectivity between on-premise host and cloud host
 
 ## Introduction
-In a Data Guard configuration, information is transmitted in both directions between the primary and standby databases. This requires basic configuration, network tuning and opening of ports at both primary and standby databases. 
+In a Data Guard configuration, information is transmitted in both directions between the primary and standby databases. This requires basic configuration, network tuning and opening of ports at both primary and standby databases site. 
 
 Estimated Lab Time: 30 minutes.
 
@@ -9,7 +9,7 @@ Estimated Lab Time: 30 minutes.
 - Open the 1521 port for both hosts.
 - Enable ssh connect for the oracle user.
 - Configure the Name Resolution.
-- Set TCP socket size.
+- Set TCP socket size for performance.
 - Prompt-less SSH configure.
 
 ### Prerequisites
@@ -73,17 +73,17 @@ AllowUsers opc
 <copy>sudo vi /etc/hosts</copy>
 ```
 
-   - From the primary side, add the standby host **public ip** and host name in the file like the following:
+    - From the primary side, add the standby host **public ip** and host name in the file like the following:
 
-   ```
-   xxx.xxx.xxx.xxx  standby
-   ```
+    ```
+    xxx.xxx.xxx.xxx  standby
+    ```
+    
+    - From the standby side, add the primary host **public ip** and host name in the file like the following:
 
-   - From the standby side, add the primary host **public ip** and host name in the file like the following:
-
-   ```
-   xxx.xxx.xxx.xxx primary
-   ```
+    ```
+    xxx.xxx.xxx.xxx primary
+    ```
 
 2. Validate the connectivity, install telnet on both sides.
 
@@ -91,7 +91,7 @@ AllowUsers opc
 <copy>sudo yum -y install telnet</copy>
 ```
 
-   - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exist. 
+    - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exist. 
 
     ```
      $ telnet standby 1521
@@ -105,7 +105,7 @@ AllowUsers opc
      $ 
      ```
 
-   - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exist. 
+    - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exist. 
 
     ```
      $ telnet primary 1521

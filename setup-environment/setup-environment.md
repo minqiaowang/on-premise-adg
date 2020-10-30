@@ -35,9 +35,9 @@ Click on the link below to download the Resource Manager zip files you need to b
 
     ![](./images/step1.3-createstackpage.png " ")
 
-2. Click the **Browse** link and select the primary database setup zip file (`db19c-primary-num.zip`) that you downloaded. Click **Select** to upload the zip file.
+2. Check the **ZIP FILE**, Click the **Browse** link and select the primary database setup zip file (`db19c-primary-num.zip`) that you downloaded. Click **Select** to upload the zip file.
 
-    ![](./images/step1.4-create-stack-orig.png " ")
+    ![](images/image-20201030094139692.png)
 
     Enter the following information. Accept all the defaults and click **Next**.
 
@@ -47,15 +47,15 @@ Click on the link below to download the Resource Manager zip files you need to b
 
     - **Compartment**:  Accept the default or change to the correct compartment.
 
-3. Enter the following information and click **Next**. 
+3. Accept the default value of the `Instance_Shape`. Paste the content of the public key you create before to the `SSH_PUBLIC_KEY`,  and click **Next**. 
 
-    ![](images/image-20200622161816355.png " ")
+    ![](images/image-20201030094440068.png)
 
-    **SSH Public Key**:  Paste the public key you created in the earlier step. *(Note: If you used the Oracle Cloud Shell to create your key, make sure you paste the pub file in a notepad, remove any hard returns.  The file should be one line or you will not be able to login to your compute instance)*
+    
 
 4. Click **Create**.
 
-    ![](./images/step1.6-create-db19c-stack-3.png " ")
+    ![](images/image-20201030094944273.png)
 
 5. Your stack has now been created!  Now to create your environment. *Note: If you get an error about an invalid DNS label, go back to your Display Name, please do not enter ANY special characters or spaces. It will fail.*
 
@@ -69,7 +69,7 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
 
     ![](./images/terraformactions.png " ")
 
-    ![](./images/step2.1-terraformclickplan.png " ")
+    ![](images/image-20201030095622286.png)
 
     ![](./images/planjob.png " ")
 
@@ -83,15 +83,15 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
 
     ![](./images/applyjob1.png " ")
 
-    ![](./images/step3.1-terraformclickapply.png " ")
+    ![](images/image-20201030095534379.png)
 
     ![](./images/applyjob2.png " ")
 
     ![](./images/step3.1-applyjob3.png " ")
 
-2.  Once this job succeeds, you will get an apply complete notification from Terraform.  Examine it closely, 1 resource has been added. Congratulations, your environment is created! Time to login to your instance to finish the configuration.
+2.  Once this job succeeds, you will get an apply complete notification from Terraform.  Examine it closely, 1 resource has been added. In the end of the apply log,  you can get the **public ip address** of the primary instance. Congratulations, your environment is created! Time to login to your instance to finish the configuration.
 
-    ![](./images/applycomplete.png " ")
+    ![](images/image-20201030100144873.png)
 
 ## **Step 4:** Connect to your Instance
 
@@ -107,21 +107,23 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
     ssh -i ~/.ssh/optionskey opc@<Your Compute Instance Public IP Address>
     ````
 
-    ![](./images/cloudshellssh.png " ")
+4. After successfully logging in, proceed to Step 5.
 
-    ![](./images/cloudshelllogin.png " ")
+    ```
+    ssh -i labkey opc@xxx.xxx.xxx.xxx
+    The authenticity of host 'xxx.xxx.xxx.xxx (xxx.xxx.xxx.xxx)' can't be established.
+    ECDSA key fingerprint is SHA256:Wq+YNHzgc1JUySBJuTRO0T4NKpeRz5Udw82Mn5RCe6c.
+    Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+    Warning: Permanently added 'xxx.xxx.xxx.xxx' (ECDSA) to the list of known hosts.
+    -bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+    [opc@primary ~]$ 
+    ```
 
-4.  After successfully logging in, proceed to Step 5.
+    
 
 ### Windows using Putty
 
 1.  Open up putty and create a new connection.
-
-    ````
-    ssh -i ~/.ssh/optionskey opc@<Your Compute Instance Public IP Address>
-    ````
-
-    ![](./images/ssh-first-time.png " ")
 
 2.  Enter a name for the session and click **Save**.
 
@@ -182,12 +184,11 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
     <copy>
     sudo su - oracle
     sqlplus system/Ora_DB4U@localhost:1521/orclpdb
-    exit
     </copy>
     ````
-
-    ![](./images/sqlplus_login_orclpdb.png " ")
-
+    
+![](./images/sqlplus_login_orclpdb.png " ")
+    
 6.  To leave `sqlplus` you need to use the exit command. Copy and paste the text below into your terminal to exit sqlplus.
 
     ````
@@ -211,6 +212,8 @@ You now have a fully functional Oracle Database 19c instance **ORCL** running on
 Repeat from the Step 1 to Step 5 to prepare the standby database. This time please choose the `db19c-standby-num.zip` file in the Resource Manager. And you can choose another region and compartment for the standby database.
 
 After complete, you have a standby database that SID is **ORCL**, same as the primary database and the `DB_UNIQUE_NAME` is **ORCLSTBY**, the default pdb name is also named **orclpdb**.
+
+
 
 You may proceed to the next lab.
 
