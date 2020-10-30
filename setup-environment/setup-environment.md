@@ -207,7 +207,7 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
 
 You now have a fully functional Oracle Database 19c instance **ORCL** running on Oracle Cloud Compute, the default pdb name is **orclpdb**. This instance is your primary DB.
 
-## Step 6: Prepare the standby database
+## **Step 6:** Prepare the standby database
 
 Repeat from the Step 1 to Step 5 to prepare the standby database. This time please choose the `db19c-standby-num.zip` file in the Resource Manager. And you can choose another region and compartment for the standby database.
 
