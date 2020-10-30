@@ -1,8 +1,20 @@
 # Deploy ADG Process
 
-In the following steps you will setup Data Guard from a Single Instance database to another Single Instance database. 
+## Introduction
+In this lab you will setup Data Guard from a Single Instance database to another Single Instance database. 
 
-##Lab Prerequisites
+Estimated Lab Time: 30 minutes.
+
+### Objectives
+- Manually Delete the standby database.
+- Copy the Password File to the standby host.
+- Configure Static Listeners.
+- TNS Entries for Redo Transport.
+- Instantiate the Standby Database.
+- Clear all online and standby redo logs.
+- Configure Data Guard broker
+
+### Prerequisites
 
 This lab assumes you have already completed the following labs:
 
@@ -10,7 +22,7 @@ This lab assumes you have already completed the following labs:
 
 
 
-##Step 1: Manually Delete the standby database Created by Tooling 
+## **Step 1:** Manually Delete the standby database Created by Tooling 
 
 Please perform the below operations to delete the starter database files in the standby and we will restore the primary database using RMAN. 
 
@@ -130,7 +142,7 @@ Version 19.7.0.0.0
 
 
 
-## Step 2: Copy the Password File to the standby host 
+## **Step 2:** Copy the Password File to the standby host 
 
 As **oracle** user, copy the primary database password file to the standby host `$ORACLE_HOME/dbs` directory. 
 
@@ -150,7 +162,7 @@ orapwORCL 100% 2048    63.5KB/s   00:00
 
 
 
-## Step 3: Configure Static Listeners 
+## **Step 3:** Configure Static Listeners 
 
 A static listener is needed for initial instantiation of a standby database. The static listener enables remote connection to an instance while the database is down in order to start a given instance. See MOS 1387859.1 for additional details.  A static listener for Data Guard Broker is optional. 
 
@@ -267,7 +279,7 @@ Version 19.7.0.0.0
 
 
 
-## Step 4: TNS Entries for Redo Transport 
+## **Step 4:** TNS Entries for Redo Transport 
 
 1. From the primary side, switch as **oracle** user, edit the `tnsnames.ora`
 
@@ -321,7 +333,7 @@ ORCL =
 
 
 
-## Step 5: Instantiate the Standby Database 
+## **Step 5:** Instantiate the Standby Database 
 
 The standby database can be created from the active primary database.
 
@@ -532,7 +544,7 @@ SQL>
 
 
 
-## Step 6: Clear all online and standby redo logs 
+## **Step 6:** Clear all online and standby redo logs 
 
 1. Copy the following command.
 
@@ -571,7 +583,7 @@ SQL>
 
 
 
-## Step 7: Configure Data Guard broker
+## **Step 7:** Configure Data Guard broker
 
 1. Copy the following command.
 
@@ -685,3 +697,12 @@ If there is a warning message, Warning: ORA-16809: multiple warnings detected fo
 
 Now, the Data Guard is ready. The standby database is in mount status.
 
+You may proceed to the next lab.
+
+## Acknowledgements
+* **Author** - Minqiao Wang, DB Product Management, Oct 2020
+* **Contributors** -  
+* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Oct 2020
+
+## See an issue?
+Please submit feedback using this [form](https://apexapps.oracle.com/pls/apex/f?p=133:1:::::P1_FEEDBACK:1). Please include the *workshop name*, *lab* and *step* in your request.  If you don't see the workshop name listed, please enter it manually. If you would like us to follow up with you, enter your email in the *Feedback Comments* section.

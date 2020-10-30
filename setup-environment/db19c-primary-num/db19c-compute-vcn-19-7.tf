@@ -1,17 +1,17 @@
 variable "tenancy_ocid" {}
 variable "region" {}
-# variable "display_name" { default = "workshop" }
+// variable "display_name" { default = "workshop" }
 variable "AD" { default = 1 }
 variable "Image-Id" {default="ocid1.image.oc1..aaaaaaaafc323nq572bujhzwja7e6df532ioqq7qididhmnujpgbshm2zrzq"}
 variable "instance_shape" {
-  default = "VM.Standard2.2"
+  default = "VM.Standard2.1"
 }
 variable "compartment_ocid" {}
 variable "ssh_public_key" {}
 
-variable "num_instances" {
-  default = "1"
-}
+//variable "num_instances" {
+//  default = "1"
+//}
 
 terraform {
   required_version = ">= 0.12.0"
@@ -109,17 +109,17 @@ resource "oci_core_default_security_list" "default-security-list" {
 
 
 resource "oci_core_instance" "ssworkshop_instance" {
-  count               = "${var.num_instances}"
+  //count               = "${var.num_instances}"
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[var.AD - 1], "name")}"
   compartment_id      = "${var.compartment_ocid}"
-  display_name        = "primary${count.index}"
+  display_name        = "primary"
   shape               = "${var.instance_shape}"
 
   create_vnic_details {
     subnet_id = "${oci_core_subnet.example-public-subnet1.id}"
     display_name     = "primary"
     assign_public_ip = true
-    hostname_label   = "primary${count.index}"
+    hostname_label   = "primary"
   }
 
   source_details {
@@ -130,10 +130,11 @@ resource "oci_core_instance" "ssworkshop_instance" {
 
   metadata = {
     ssh_authorized_keys = "${var.ssh_public_key}"
+    user_data           = "${base64encode(file("custom-db.sh"))}"
   }
 
 }
 
-output "instance_public_ips" {
-  value = ["${oci_core_instance.ssworkshop_instance.*.public_ip}"]
+output "primary_public_ips" {
+  value = ["${oci_core_instance.ssworkshop_instance.public_ip}"]
 }

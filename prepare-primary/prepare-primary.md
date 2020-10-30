@@ -1,24 +1,31 @@
 # Prepare the Primary Database
 
-In this lab, You will use the compute instances in the OCI to simulate the on-premise primary database and standby database. In Lab3, the Oracle 19c database has been installed and patched to 19.7.0. The primary database can deploy into a different region from the standby database. 
+## Introduction
+In this lab, You will check and modify the status of the primary site database, make it ready to ADG.
 
-## Lab Prerequisites
+Estimated Lab Time: 30 minutes.
 
+### Objectives
+- Enable achivelog and flashback for the primary database.
+- Change redo log size and create standby log.
+- Modify the init parameters for best practice.
+
+### Prerequisites
 This lab assumes you have completed the following labs:
 
-* Generate SSH Key
-* Environment Setup for multiple users
+- Generate SSH Key
+- Environment Setup for Primary and Standby
 
-You will be assigned with 2 VM hosts:
+Now you have 2 VM hosts:
 
-- `primary**`: The primary database host, DB unique name **ORCL**, SID is **ORCL**
-- `standby**`: The standby database host, DB unique name **ORCLSTBY**, SID is **ORCL**
+- `primary`: The primary database host, DB unique name **ORCL**, SID is **ORCL**
+- `standby`: The standby database host, DB unique name **ORCLSTBY**, SID is **ORCL**
 
 
 
-## Step 1: Enable achivelog and flashback
+## **Step 1:** Enable achivelog and flashback
 
-1. Connect to the primary VM hosts which you created in Lab3 with opc user. Use putty tool (Windows) or command line (Mac, Linux).
+1. Connect to the primary VM hosts with opc user. Use putty tool (Windows) or command line (Mac, Linux).
 
    ```
    ssh -i labkey opc@xxx.xxx.xxx.xxx
@@ -105,9 +112,7 @@ Database altered.
 SQL>
 ```
 
-
-
-## Step 2: Change redo log size and create standby log
+## **Step 2:** Change redo log size and create standby log
 
 1. Change the redo log size to 1024M according to the best practice. Check the status of the redo log first.
 
@@ -210,7 +215,7 @@ SQL>
 
 
 
-## Step 3: Modify the init parameters for best practice
+## **Step 3:** Modify the init parameters for best practice
 
 Modify some init parameters for best practice.
 
@@ -230,3 +235,12 @@ System altered.
 SQL> exit;
 ```
 
+You may proceed to the next lab.
+
+## Acknowledgements
+* **Author** - Minqiao Wang, DB Product Management, Oct 2020
+* **Contributors** -  
+* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Oct 2020
+
+## See an issue?
+Please submit feedback using this [form](https://apexapps.oracle.com/pls/apex/f?p=133:1:::::P1_FEEDBACK:1). Please include the *workshop name*, *lab* and *step* in your request.  If you don't see the workshop name listed, please enter it manually. If you would like us to follow up with you, enter your email in the *Feedback Comments* section.

@@ -1,15 +1,23 @@
 # Failover and Reinstate
 
+## Introduction
 A failover is an unplanned event that assumes the primary database is lost. The standby database is converted to a primary database immediately. A failover might result in some data loss when you use **Maximum Performance** protection mode. After a failover the old primary database must be reinstated as a physical standby which is made simpler with flashback database and Data Guard broker enabled. 
 
-## Lab Prerequisites
+Estimated Lab Time: 30 minutes.
+
+### Objectives
+- Setup the current primary database flashback on.
+- Failover.
+- Reinstate the previous primary database.
+
+### Prerequisites
 
 This lab assumes you have already completed the following labs:
 
 - Deploy Active Data Guard
 - Test with Active Data Guard
 
-## Step 1: Setup the current primary database flashback on
+## **Step 1:** Setup the current primary database flashback on
 
 In the previous lab, you have done the Data Guard switch over. Now, the current primary database is the **ORCLSTBY** and the current standby database is the **ORCL**.
 
@@ -87,7 +95,7 @@ Version 19.7.0.0.0
 [oracle@dbstby ~]$ 
 ```
 
-## Step 2: Failover
+## **Step 2:** Failover
 
 1. Connect with DGMGRL, validate the primary and standby database
 
@@ -181,7 +189,7 @@ DGMGRL>
 
 Now, the primary is the back to the **ORCL** database, and the standby database is disabled, which needs to be reinstated.
 
-## Step 3: Reinstate the previous primary database
+## **Step 3:** Reinstate the previous primary database
 
 1. In the current standby side, connect to sqlplus as sysdba, shutdown the database and startup mount before reinstating. 
 
@@ -273,3 +281,10 @@ READ ONLY WITH APPLY PHYSICAL STANDBY
 SQL> 
 ```
 
+## Acknowledgements
+* **Author** - Minqiao Wang, DB Product Management, Oct 2020
+* **Contributors** -  
+* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Oct 2020
+
+## See an issue?
+Please submit feedback using this [form](https://apexapps.oracle.com/pls/apex/f?p=133:1:::::P1_FEEDBACK:1). Please include the *workshop name*, *lab* and *step* in your request.  If you don't see the workshop name listed, please enter it manually. If you would like us to follow up with you, enter your email in the *Feedback Comments* section.

@@ -5,7 +5,7 @@ Oracle’s Maximum Availability Architecture (Oracle MAA) is the best practices 
 
 
 ## Workshops
-Click [here](https://minqiaowang.github.io/on-premise-adg/workshop/index.html) to access the content.
+Click [here](https://minqiaowang.github.io/on-premise-adg/workshops/freetier/index.html) to access the content.
 
 
 ## Get an Oracle Cloud Trial Account for Free!

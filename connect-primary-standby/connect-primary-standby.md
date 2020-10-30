@@ -1,16 +1,27 @@
 # Set connectivity between on-premise host and cloud host
 
+## Introduction
 In a Data Guard configuration, information is transmitted in both directions between the primary and standby databases. This requires basic configuration, network tuning and opening of ports at both primary and standby databases. 
 
-##Lab Prerequisites
+Estimated Lab Time: 30 minutes.
+
+### Objectives
+- Open the 1521 port for both hosts.
+- Enable ssh connect for the oracle user.
+- Configure the Name Resolution.
+- Set TCP socket size.
+- Prompt-less SSH configure.
+
+### Prerequisites
 
 This lab assumes you have already completed the following labs:
 
+- Setup environment for primary and standby
 - Prepare the Primary Database
 
 In this Lab, you can use 2 terminal windows, one connected to the primary host, the other connected to the standby host. 
 
-## Step 1: Open the 1521 port for the database host
+## **Step 1:** Open the 1521 port for both database hosts
 
 1. Connect to the both hosts with **opc** user. Use putty tool (Windows) or command line (Mac, Linux).
 
@@ -30,7 +41,7 @@ In this Lab, you can use 2 terminal windows, one connected to the primary host, 
 
    
 
-## Step 2: Enable ssh connect for the oracle user
+## **Step 2:** Enable ssh connect for the oracle user
 
 1. Work as opc user, edit the ssh configure file on both side
 
@@ -54,16 +65,9 @@ AllowUsers opc
 ```
 
 
+## **Step 3:** Name Resolution Configure
 
-## Step 3: Name Resolution Configure
-
-1. Connect as the opc user.
-
-```
-ssh -i labkey opc@xxx.xxx.xxx.xxx
-```
-
-2. Edit `/etc/hosts` on both sides.
+1. Connect as the opc user. Edit `/etc/hosts` on both sides.
 
 ```
 <copy>sudo vi /etc/hosts</copy>
@@ -72,16 +76,16 @@ ssh -i labkey opc@xxx.xxx.xxx.xxx
    - From the primary side, add the standby host **public ip** and host name in the file like the following:
 
    ```
-   xxx.xxx.xxx.xxx  standby**
+   xxx.xxx.xxx.xxx  standby
    ```
 
    - From the standby side, add the primary host **public ip** and host name in the file like the following:
 
    ```
-   xxx.xxx.xxx.xxx primary**
+   xxx.xxx.xxx.xxx primary
    ```
 
-3. Validate the connectivity, install telnet on both sides.
+2. Validate the connectivity, install telnet on both sides.
 
 ```
 <copy>sudo yum -y install telnet</copy>
@@ -90,7 +94,7 @@ ssh -i labkey opc@xxx.xxx.xxx.xxx
    - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exist. 
 
     ```
-     $ telnet standby** 1521
+     $ telnet standby 1521
      Trying 158.101.136.61...
      Connected to 158.101.136.61.
      Escape character is '^]'.
@@ -104,7 +108,7 @@ ssh -i labkey opc@xxx.xxx.xxx.xxx
    - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exist. 
 
     ```
-     $ telnet primary** 1521
+     $ telnet primary 1521
      Trying 140.238.18.190...
      Connected to 140.238.18.190.
      Escape character is '^]'.
@@ -117,11 +121,11 @@ ssh -i labkey opc@xxx.xxx.xxx.xxx
 
 
 
-## Step 4: Set TCP socket size
+## **Step 4:** Set TCP socket size
 
 According to the best practice, set TCP socket size, adjust all socket size maximums to 128MB or 134217728. This is needed to setup in both primary and standby side.  
 
-1. From both side, switch to **opc** user, edit the config file.
+1. From both side, connect as **opc** user, edit the config file.
 
 ```
 <copy>sudo vi /etc/sysctl.conf</copy>
@@ -139,7 +143,7 @@ net.core.wmem_max = 134217728
 3. Reload and check the values.
 
 ```
-[opc@adgstudent1 ~]$ sudo /sbin/sysctl -p
+[opc@primaray ~]$ sudo /sbin/sysctl -p
 fs.file-max = 6815744
 kernel.sem = 250 32000 100 128
 kernel.shmmni = 4096
@@ -161,12 +165,11 @@ sysctl: reading key "net.ipv6.conf.all.stable_secret"
 sysctl: reading key "net.ipv6.conf.default.stable_secret"
 sysctl: reading key "net.ipv6.conf.ens3.stable_secret"
 sysctl: reading key "net.ipv6.conf.lo.stable_secret"
-[opc@adgstudent1 ~]$ 
+[opc@primary ~]$ 
 ```
 
 
-
-## Step 5: Prompt-less SSH configure
+## **Step 5:** Prompt-less SSH configure
 
 Now you will configure the prompt-less ssh for oracle users between the primary and the standby.
 
@@ -226,7 +229,7 @@ Now you will configure the prompt-less ssh for oracle users between the primary 
      - From primary side, test the connection from the primary to the standby, using the public ip or hostname of the standby hosts.
 
      ```
-     [oracle@primary ~]$ ssh oracle@standby** echo Test success
+     [oracle@primary ~]$ ssh oracle@standby echo Test success
      The authenticity of host '158.101.136.61 (158.101.136.61)' can't be established.
      ECDSA key fingerprint is SHA256:c3ghvWrZxvOnJc6aKWIPbFC80h65cZCxvQxBVdaRLx4.
      ECDSA key fingerprint is MD5:a8:34:53:0f:3e:56:64:56:72:a1:cb:47:18:44:ac:4c.
@@ -282,7 +285,7 @@ Now you will configure the prompt-less ssh for oracle users between the primary 
      - From the standby side, test the connection from standby to primary, using the public ip or hostname of the primary hosts.
 
      ```
-     [oracle@standby ~]$ ssh oracle@primary** echo Test success
+     [oracle@standby ~]$ ssh oracle@primary echo Test success
      The authenticity of host '140.238.18.190 (140.238.18.190)' can't be established.
      ECDSA key fingerprint is SHA256:1GMD9btUlIjLABsTsS387MUGD4LrZ4rxDQ8eyASBc8c.
      ECDSA key fingerprint is MD5:ff:8b:59:ac:05:dd:27:07:e1:3f:bc:c6:fa:4e:5d:5c.
@@ -292,3 +295,12 @@ Now you will configure the prompt-less ssh for oracle users between the primary 
      [oracle@standby ~]$ 
      ```
 
+You may proceed to the next lab.
+
+## Acknowledgements
+* **Author** - Minqiao Wang, DB Product Management, Oct 2020
+* **Contributors** -  
+* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Oct 2020
+
+## See an issue?
+Please submit feedback using this [form](https://apexapps.oracle.com/pls/apex/f?p=133:1:::::P1_FEEDBACK:1). Please include the *workshop name*, *lab* and *step* in your request.  If you don't see the workshop name listed, please enter it manually. If you would like us to follow up with you, enter your email in the *Feedback Comments* section.

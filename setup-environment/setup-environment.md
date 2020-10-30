@@ -2,18 +2,19 @@
 
 ## Introduction
 
-In this workshop, you will use the compute instances in the Oracle Cloud to simulate the on-premise primary and standby database. This lab will show you how to setup a Oracle Cloud network (VCN) and the compute instance running a pre-configured Oracle Database 19c install using Oracle Resource Manager and Terraform. You can setup the primary and standby database using the related scripts. The primary and the standby database are in different VCN. You can prepare multiple primary and standby database for students before the workshop.
+In this lab you will show setup a Oracle Cloud network (VCN) and the compute instance with a pre-configured Oracle Database 19c using Oracle Resource Manager and Terraform. You can setup the primary and standby database using the related scripts. The primary and the standby database are in different VCN. You can setup primary and standby database in the same region or in different region.
+
+Estimated Lab Time: 60 minutes.
 
 ### Objectives
 
--   Setup a network and compute instance using the DB19c Marketplace image
--   Use Terraform and Resource Manager to complete the setup
+-   Use Terraform and Resource Manager to setup the primary and standby environment.
 
-### Lab Prerequisites
+### Prerequisites
 
 This lab assumes you have already completed the following:
-- Have Oracle Cloud Account
-- Create SSH Keys
+- An Oracle Free Tier, Always Free, Paid or LiveLabs Cloud Account
+- Create a SSH Keys pair
 
 Click on the link below to download the Resource Manager zip files you need to build your enviornment.
 
@@ -22,9 +23,9 @@ Click on the link below to download the Resource Manager zip files you need to b
 
 
 
-## Step 1: Prepare the Primary Database
+## **Step 1:** Prepare the Primary Database
 
-3.  Open up the hamburger menu in the left hand corner. Choose **Resource Manager > Stacks**. Choose the **Compartment** that you want to use, click the  **Create Stack** button. *Note: If you are in a workshop, double check your region to ensure you are on the assigned region.*
+1. Login to the Oracle Cloud Console, open the hamburger menu in the left hand corner. Choose **Resource Manager > Stacks**. Choose the **Compartment** that you want to use, click the  **Create Stack** button. *Note: If you are in a workshop, double check your region to ensure you are on the assigned region.*
 
     ![](./images/cloud-homepage.png " ")
 
@@ -34,7 +35,7 @@ Click on the link below to download the Resource Manager zip files you need to b
 
     ![](./images/step1.3-createstackpage.png " ")
 
-4.  Click the **Browse** link and select the primary database setup zip file (db19c-primary-num.zip) that you downloaded. Click **Select** to upload the zip file.
+2. Click the **Browse** link and select the primary database setup zip file (`db19c-primary-num.zip`) that you downloaded. Click **Select** to upload the zip file.
 
     ![](./images/step1.4-create-stack-orig.png " ")
 
@@ -46,23 +47,21 @@ Click on the link below to download the Resource Manager zip files you need to b
 
     - **Compartment**:  Accept the default or change to the correct compartment.
 
-5.  Enter the following information and click **Next**. You will be updating Num_Instances and SSH Key.
+3. Enter the following information and click **Next**. 
 
     ![](images/image-20200622161816355.png " ")
 
     **SSH Public Key**:  Paste the public key you created in the earlier step. *(Note: If you used the Oracle Cloud Shell to create your key, make sure you paste the pub file in a notepad, remove any hard returns.  The file should be one line or you will not be able to login to your compute instance)*
 
-    **NUM_INSTANCES:** How many instances you want to create for the base on the number of  the students. Default is 1.
-
-6.  Click **Create**.
+4. Click **Create**.
 
     ![](./images/step1.6-create-db19c-stack-3.png " ")
 
-7.  Your stack has now been created!  Now to create your environment. *Note: If you get an error about an invalid DNS label, go back to your Display Name, please do not enter ANY special characters or spaces. It will fail.*
+5. Your stack has now been created!  Now to create your environment. *Note: If you get an error about an invalid DNS label, go back to your Display Name, please do not enter ANY special characters or spaces. It will fail.*
 
     ![](./images/step1.7-stackcreated.png " ")
 
-## Step 2: Terraform Plan (OPTIONAL)
+## **Step 2:** Terraform Plan (OPTIONAL)
 
 When using Resource Manager to deploy an environment, execute a terraform **Plan** to verify the configuration. This is an optional step in this lab.
 
@@ -76,7 +75,7 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
 
     ![](./images/planjob1.png " ")
 
-## Step 3: Terraform Apply
+## **Step 3:** Terraform Apply
 
 When using Resource Manager to deploy an environment, execute a terraform **Plan** and **Apply**. Let's do that now.
 
@@ -94,39 +93,7 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
 
     ![](./images/applycomplete.png " ")
 
-## Step 4: Connect to your Instance
-
-Choose the environment where you created your ssh-key in the previous lab (Generate SSH Keys).
-
-*NOTE 1:  If you are using your laptop to connect, you cannot connect while on VPN or in the Oracle office on clear-corporate (choose clear-internet). This does not apply to the Oracle Cloud Shell.*
-
-*NOTE 2: The ssh-daemon may be disabled for the first 5 minutes or so while the instance is processing.  If you are unable to connect and certain you have a valid key, wait a few minutes and try again.*
-
-### Oracle Cloud Shell
-
-1.  To re-start the Oracle Cloud shell, go to your Cloud console and click the cloud shell icon to the right of the region. *Note: Make sure you are in the region you were assigned.*
-
-    ![](./images/cloudshell.png " ")
-
-2.  Go to **Compute** -> **Instances** and select the instance you created (make sure you choose the correct compartment).
-
-    ![](./images/step4.1.2-computeinstance.png " ")
-
-3.  On your instance's homepage, copy the Public IP addresss for your instance to a notepad.
-
-    ![](./images/step4.1.3-instancehomepage.png " ")
-
-4.  Enter the command below and update it with your cloud shell key name and your instance's public IP addess to login to your instance.
-
-    ````
-    ssh -i ~/.ssh/<sshkeyname> opc@<Your Compute Instance Public IP Address>
-    ````
-
-5.  When prompted, answer **yes** to continue connecting.
-
-    ![](./images/step4.1.5-instancelogin.png " ")
-
-6.  Continue to Step 5 on the left hand menu.
+## **Step 4:** Connect to your Instance
 
 ### MAC or Windows CYGWIN Emulator
 
@@ -174,18 +141,18 @@ Choose the environment where you created your ssh-key in the previous lab (Gener
 
 8.  Click Open to begin your session with the instance.
 
-## Step 5: Verify the Database is Up
+## **Step 5:** Verify the Database is Up
 
-1.  From your connected session of choice **tail** the `buildsingle.log` or `buildsingle1.log` file. This file has the configures log of the database.
+1.  From your connected session of choice **tail** the `buildsingle.log`, This file has the configures log of the database.
 
     ````
     <copy>
-    tail -f /u01/ocidb/buildsingle*.log
+    tail -f /u01/ocidb/buildsingle.log
     </copy>
     ````
     ![](./images/tailOfBuildDBInstanceLog.png " ")
 
-2.  When you see the following message, the database setup is complete - **Completed successfully in XXXX seconds** (this may take up to 30 minutes). You can do the step 6 while wait the database ready .
+2.  When you see the following message, the database setup is complete - **Completed successfully in XXXX seconds** (this may take up to 30 minutes). You can do the **Step 6** to setup the standby environment while waiting the primary database ready .
 
     ![](./images/tailOfBuildDBInstanceLog_finished.png " ")
 
@@ -237,12 +204,21 @@ Choose the environment where you created your ssh-key in the previous lab (Gener
     </copy>
     ````
 
-You now have a fully functional Oracle Database 19c instance **ORCL** running on Oracle Cloud Compute, the default pdb name is **orclpdb**.
+You now have a fully functional Oracle Database 19c instance **ORCL** running on Oracle Cloud Compute, the default pdb name is **orclpdb**. This instance is your primary DB.
 
 ## Step 6: Prepare the standby database
 
-Repeat from the Step 1 to Step 5 to prepare the standby database. This time please choose the db19c-standby-num.zip file in the Resource Manager. And you can choose another region and compartment for the standby database.
+Repeat from the Step 1 to Step 5 to prepare the standby database. This time please choose the `db19c-standby-num.zip` file in the Resource Manager. And you can choose another region and compartment for the standby database.
 
-After complete, you have a standby database that SID is **ORCL**, same as the primary database and the DB_UNIQUE_NAME is **ORCLSTBY**, the default pdb name is also named **orclpdb**.
+After complete, you have a standby database that SID is **ORCL**, same as the primary database and the `DB_UNIQUE_NAME` is **ORCLSTBY**, the default pdb name is also named **orclpdb**.
 
+You may proceed to the next lab.
+
+## Acknowledgements
+* **Author** - Minqiao Wang, DB Product Management, Oct 2020
+* **Contributors** -  
+* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Oct 2020
+
+## See an issue?
+Please submit feedback using this [form](https://apexapps.oracle.com/pls/apex/f?p=133:1:::::P1_FEEDBACK:1). Please include the *workshop name*, *lab* and *step* in your request.  If you don't see the workshop name listed, please enter it manually. If you would like us to follow up with you, enter your email in the *Feedback Comments* section.
 
