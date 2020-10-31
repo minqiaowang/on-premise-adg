@@ -18,8 +18,8 @@ This lab assumes you have already completed the following:
 
 Click on the link below to download the Resource Manager zip files you need to build your enviornment.
 
-- [db19c-primary-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-environment/db19c-primary-num.zip) - Packaged terraform primary database instance creation script
-- [db19c-standby-num.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-environment/db19c-standby-num.zip) - Packaged terraform standby database instance creation script
+- [db19c-primary-num.zip](https://objectstorage.us-ashburn-1.oraclecloud.com/p/hjoSts4QD56z3RLS-gl3RuyiPESRs9bSxfsKzdIYFAJ339ZgG-EXarwIiQM5xF5T/n/c4u03/b/data-management-library-files/o/db19c-primary-num.zip) - Packaged terraform primary database instance creation script
+- [db19c-standby-num.zip](https://objectstorage.us-ashburn-1.oraclecloud.com/p/KECCEpS6DGb4Lr-8nu8uVRsP5Jg2r0aF3ae9LCFyRlegKJgJCprVaMTCLr6slrpD/n/c4u03/b/data-management-library-files/o/db19c-standby-num.zip) - Packaged terraform standby database instance creation script
 
 
 
@@ -178,6 +178,7 @@ When using Resource Manager to deploy an environment, execute a terraform **Plan
     </copy>
     ````
     
+
 ![](./images/sqlplus_login_orclpdb.png " ")
     
 6.  To leave `sqlplus` you need to use the exit command. Copy and paste the text below into your terminal to exit sqlplus.

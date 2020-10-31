@@ -191,8 +191,8 @@ There are several ways to check the lag between the primary and standby.
 
    ```
    <copy>
-   wget https://github.com/minqiaowang/on-premise-adg/raw/master/test-with-adg/workload.sh
-   wget https://github.com/minqiaowang/on-premise-adg/raw/master/test-with-adg/scn.sql
+   wget https://objectstorage.us-ashburn-1.oraclecloud.com/p/6qb-tsAMHHM-iQhmVPifNoBazUUuKFjh6MN27xapzuTNcAHzoZTuZqnn1QgBgnaE/n/c4u03/b/data-management-library-files/o/workload.sh
+   wget https://objectstorage.us-ashburn-1.oraclecloud.com/p/PpXBKEofD92m-Q7jh-465U3FbCpvnysflKdk6ptRPRJzcKngSKcJU5l5iCWo4eN0/n/c4u03/b/data-management-library-files/o/scn.sql
    </copy>
    ```
 
@@ -201,45 +201,35 @@ There are several ways to check the lag between the primary and standby.
 2. From primary side, run as **oracle** user, download scripts using the command you copied.
 
    ```
-   [oracle@primary ~]$ wget https://github.com/minqiaowang/on-premise-adg/raw/master/test-with-adg/workload.sh
-   --2020-09-05 09:22:06--  https://github.com/minqiaowang/on-premise-adg/raw/master/test-with-adg/workload.sh
-   Resolving github.com (github.com)... 140.82.112.4
-   Connecting to github.com (github.com)|140.82.112.4|:443... connected.
-   HTTP request sent, awaiting response... 302 Found
-   Location: https://raw.githubusercontent.com/minqiaowang/on-premise-adg/master/test-with-adg/workload.sh [following]
-   --2020-09-05 09:22:07--  https://raw.githubusercontent.com/minqiaowang/on-premise-adg/master/test-with-adg/workload.sh
-   Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.156.133
-   Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.156.133|:443... connected.
+   [oracle@primary ~]$ wget https://objectstorage.us-ashburn-1.oraclecloud.com/p/6qb-tsAMHHM-iQhmVPifNoBazUUuKFjh6MN27xapzuTNcAHzoZTuZqnn1QgBgnaE/n/c4u03/b/data-management-library-files/o/workload.sh
+   --2020-10-31 02:48:08--  https://objectstorage.us-ashburn-1.oraclecloud.com/p/6qb-tsAMHHM-iQhmVPifNoBazUUuKFjh6MN27xapzuTNcAHzoZTuZqnn1QgBgnaE/n/c4u03/b/data-management-library-files/o/workload.sh
+   Resolving objectstorage.us-ashburn-1.oraclecloud.com (objectstorage.us-ashburn-1.oraclecloud.com)... 134.70.31.247, 134.70.27.247, 134.70.35.189
+   Connecting to objectstorage.us-ashburn-1.oraclecloud.com (objectstorage.us-ashburn-1.oraclecloud.com)|134.70.31.247|:443... connected.
    HTTP request sent, awaiting response... 200 OK
-   Length: 1442 (1.4K) [text/plain]
+   Length: 1442 (1.4K) [text/x-sh]
    Saving to: ‘workload.sh’
    
-   100%[================================================>] 1,442       --.-K/s   in 0s      
+   100%[==============================================>] 1,442       --.-K/s   in 0s      
    
-   2020-09-05 09:22:08 (12.4 MB/s) - ‘workload.sh’ saved [1442/1442]
+   2020-10-31 02:48:09 (10.5 MB/s) - ‘workload.sh’ saved [1442/1442]
    
-   [oracle@primary ~]$ wget https://github.com/minqiaowang/on-premise-adg/raw/master/test-with-adg/scn.sql
-   --2020-09-05 09:22:16--  https://github.com/minqiaowang/on-premise-adg/raw/master/test-with-adg/scn.sql
-   Resolving github.com (github.com)... 140.82.112.4
-   Connecting to github.com (github.com)|140.82.112.4|:443... connected.
-   HTTP request sent, awaiting response... 302 Found
-   Location: https://raw.githubusercontent.com/minqiaowang/on-premise-adg/master/test-with-adg/scn.sql [following]
-   --2020-09-05 09:22:17--  https://raw.githubusercontent.com/minqiaowang/on-premise-adg/master/test-with-adg/scn.sql
-   Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.156.133
-   Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.156.133|:443... connected.
+   [oracle@primary ~]$ wget https://objectstorage.us-ashburn-1.oraclecloud.com/p/PpXBKEofD92m-Q7jh-465U3FbCpvnysflKdk6ptRPRJzcKngSKcJU5l5iCWo4eN0/n/c4u03/b/data-management-library-files/o/scn.sql
+   --2020-10-31 02:48:29--  https://objectstorage.us-ashburn-1.oraclecloud.com/p/PpXBKEofD92m-Q7jh-465U3FbCpvnysflKdk6ptRPRJzcKngSKcJU5l5iCWo4eN0/n/c4u03/b/data-management-library-files/o/scn.sql
+   Resolving objectstorage.us-ashburn-1.oraclecloud.com (objectstorage.us-ashburn-1.oraclecloud.com)... 134.70.35.189, 134.70.31.247, 134.70.27.247
+   Connecting to objectstorage.us-ashburn-1.oraclecloud.com (objectstorage.us-ashburn-1.oraclecloud.com)|134.70.35.189|:443... connected.
    HTTP request sent, awaiting response... 200 OK
-   Length: 108 [text/plain]
+   Length: 108 [application/octet-stream]
    Saving to: ‘scn.sql’
    
-   100%[================================================>] 108         --.-K/s   in 0s      
+   100%[==============================================>] 108         --.-K/s   in 0s      
    
-   2020-09-05 09:22:17 (3.37 MB/s) - ‘scn.sql’ saved [108/108]
+   2020-10-31 02:48:30 (8.08 MB/s) - ‘scn.sql’ saved [108/108]
    
-   [oracle@primary ~]$ 
+   [oracle@primary ~]$  
    ```
-
    
-
+   
+   
 3. Change mode of the `workload.sh` file and run the workload. Ignore the error message of drop table. Keep this window open and running for the next few steps in this lab.
 
    ```
@@ -391,7 +381,6 @@ There are several ways to check the lag between the primary and standby.
    DGMGRL> 
    ```
    
-
 8. From the on-premise side, press `Ctrl-C` to terminate the running workload.
 
 
