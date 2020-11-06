@@ -19,7 +19,7 @@ This lab assumes you have already completed the following:
 Click on the link below to download the Resource Manager zip files you need to build your enviornment.
 
 - [db19c-primary-num.zip](https://objectstorage.us-ashburn-1.oraclecloud.com/p/hjoSts4QD56z3RLS-gl3RuyiPESRs9bSxfsKzdIYFAJ339ZgG-EXarwIiQM5xF5T/n/c4u03/b/data-management-library-files/o/db19c-primary-num.zip) - Packaged terraform primary database instance creation script
-- [db19c-standby-num.zip](https://objectstorage.us-ashburn-1.oraclecloud.com/p/KECCEpS6DGb4Lr-8nu8uVRsP5Jg2r0aF3ae9LCFyRlegKJgJCprVaMTCLr6slrpD/n/c4u03/b/data-management-library-files/o/db19c-standby-num.zip) - Packaged terraform standby database instance creation script
+- [db19c-standby-nodb.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-environment/db19c-standby-nodb.zip) - Packaged terraform standby database instance creation script
 
 
 
@@ -201,18 +201,16 @@ You now have a fully functional Oracle Database 19c instance **ORCL** running on
 
 ## **Step 6:** Prepare the standby database
 
-Repeat from the Step 1 to Step 5 to prepare the standby database. This time please choose the `db19c-standby-num.zip` file in the Resource Manager. And you can choose another region and compartment for the standby database.
+Repeat from the Step 1 to Step 4 to prepare the standby database. This time please choose the `db19c-standby-nodb.zip` file in the Resource Manager. And you can choose another region and compartment for the standby database.
 
-After complete, you have a standby database that SID is **ORCL**, same as the primary database and the `DB_UNIQUE_NAME` is **ORCLSTBY**, the default pdb name is also named **orclpdb**.
-
-
+After complete, you have a standby host which the database software only installed and no database created.
 
 You may proceed to the next lab.
 
 ## Acknowledgements
 * **Author** - Minqiao Wang, DB Product Management, Oct 2020
 * **Contributors** -  
-* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Oct 2020
+* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Nov 2020
 
 ## See an issue?
 Please submit feedback using this [form](https://apexapps.oracle.com/pls/apex/f?p=133:1:::::P1_FEEDBACK:1). Please include the *workshop name*, *lab* and *step* in your request.  If you don't see the workshop name listed, please enter it manually. If you would like us to follow up with you, enter your email in the *Feedback Comments* section.

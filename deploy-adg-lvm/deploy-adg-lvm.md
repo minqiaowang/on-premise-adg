@@ -6,12 +6,10 @@ In this lab you will setup Data Guard from a Single Instance database to another
 Estimated Lab Time: 30 minutes.
 
 ### Objectives
-- Manually Delete the standby database.
-- Copy the Password File to the standby host.
+- Prepare the standby database.
 - Configure Static Listeners.
 - TNS Entries for Redo Transport.
-- Instantiate the Standby Database.
-- Clear all online and standby redo logs.
+- Duplicate the Database to the standby.
 - Configure Data Guard broker
 
 ### Prerequisites
@@ -22,15 +20,11 @@ This lab assumes you have already completed the following labs:
 
 
 
-## **Step 1:** Manually Delete the standby database Created by Tooling 
+## **Step 1:** Prepare the standby host
 
-Please perform the below operations to delete the starter database files in the standby and we will restore the primary database using RMAN. 
+The standby host has the database software only installed. You need do some steps to prepare the standby host.
 
-To delete the starter database, use the manual method of removing the database files from OS file system. Do not use DBCA as this will also remove the srvctl registration as well as the /etc/oratab entries which should be retained for the standby. 
-
-To manually delete the database on the standby host, run the steps below.
-
-1. Connect to the standby host  with opc user. Use putty tool (Windows) or command line (Mac, linux)
+1. Connect to the standby VM hosts with opc user. Use putty tool (Windows) or command line (Mac, Linux).
 
    ```
    ssh -i labkey opc@xxx.xxx.xxx.xxx
@@ -38,131 +32,87 @@ To manually delete the database on the standby host, run the steps below.
 
    
 
-2. Switch to the **oracle** user. 
+2. Swtich to **oracle** user.
 
    ```
-   <copy>sudo su - oracle</copy>
+   sudo su - oracle
    ```
 
    
 
-3. Connect database as sysdba. Get the current `db_unique_name` for the standby database. 
+3. Modify the `.bash_profile` environment file.
 
-```
-[oracle@standby ~]$ sqlplus / as sysdba
+   ```
+   [oracle@standby ~]$ vi .bash_profile
+   ```
 
-SQL*Plus: Release 19.0.0.0.0 - Production on Tue Jun 23 04:37:00 2020
-Version 19.7.0.0.0
+   
 
-Copyright (c) 1982, 2020, Oracle.  All rights reserved.
-
-
-Connected to:
-Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
-
-SQL> select DB_UNIQUE_NAME from v$database;
-
-DB_UNIQUE_NAME
-------------------------------
-ORCLSTBY
-
-SQL> 
-```
-
-4. Copy the following scripts.
+4. Add the following lines to the file.
 
    ```
    <copy>
-   set heading off linesize 999 pagesize 0 feedback off trimspool on
-   spool /tmp/files.lst
-   select 'rm '||name from v$datafile union all select 'rm '||name from v$tempfile union all select 'rm '||member from v$logfile;
-   spool off
-   create pfile='/tmp/ORCLSTBY.pfile' from spfile;
+   export ORACLE_BASE=/u01/app/oracle; 
+   export ORACLE_HOME=/u01/app/oracle/product/19c/dbhome_1; 
+   export PATH=$ORACLE_HOME/bin:$PATH
+   export LD_LIBRARY_PATH=$ORACLE_HOME/lib
+   export ORACLE_SID=ORCL
    </copy>
    ```
 
    
 
-5. Run in sqlplus as sysdba. This will create a script to remove all database files. 
+5. Activate the environment variables.
 
-```
-SQL> set heading off linesize 999 pagesize 0 feedback off trimspool on
-SQL> spool /tmp/files.lst
-SQL> select 'rm '||name from v$datafile union all select 'rm '||name from v$tempfile union all select 'rm '||member from v$logfile;
-rm /u01/app/oracle/oradata/ORCLSTBY/system01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/sysaux01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/undotbs01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/pdbseed/system01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/pdbseed/sysaux01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/users01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/pdbseed/undotbs01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/orclpdb/system01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/orclpdb/sysaux01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/orclpdb/undotbs01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/orclpdb/users01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/temp01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/pdbseed/temp012020-06-22_09-21-57-597-AM.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/orclpdb/temp01.dbf
-rm /u01/app/oracle/oradata/ORCLSTBY/redo03.log
-rm /u01/app/oracle/oradata/ORCLSTBY/redo02.log
-rm /u01/app/oracle/oradata/ORCLSTBY/redo01.log
-SQL> spool off
-SQL> create pfile='/tmp/ORCLSTBY.pfile' from spfile;
-SQL> 
-```
+   ```
+   [oracle@standby ~]$ <copy>. .bash_profile</copy>
+   ```
 
-6. Shutdown the database. 
+   
 
-```
-SQL> shutdown immediate;
-Database closed.
-Database dismounted.
-ORACLE instance shut down.
-SQL> exit
-Disconnected from Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
-[oracle@standby ~]$ 
-```
+6. Configure the Listener.
 
-7. Remove database files 
+   ```
+   [oracle@standby ~]$ <copy>/u01/app/oracle/product/19c/dbhome_1/bin/netca /orahome /u01/app/oracle/product/19c/dbhome_1 /instype typical /inscomp client,oraclenet,javavm,server,ano /insprtcl tcp /cfg local /authadp NO_VALUE /responseFile /u01/app/oracle/product/19c/dbhome_1/network/install/netca_typ.rsp /lisport 1521 /silent /orahnam OraDB19Home1</copy>
+   ```
 
- Remove the existing data files, log files, and tempfile(s). The password file will be replaced and the spfile will be reused. 
+   
 
- Edit /tmp/files.lst created previously to remove any unneeded lines from sqlplus. Leaving all lines beginning with 'rm'. Then run it.
+7. Check the listener status.
 
- ```
- [oracle@standby ~]$ chmod a+x /tmp/files.lst
- [oracle@standby ~]$ vi /tmp/files.lst
- [oracle@standby ~]$ . /tmp/files.lst
- [oracle@standby ~]$ 
- ```
+   ```
+   [oracle@standby ~]$ lsnrctl status
+   
+   LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 06-NOV-2020 02:32:36
+   
+   Copyright (c) 1991, 2019, Oracle.  All rights reserved.
+   
+   Welcome to LSNRCTL, type "help" for information.
+   
+   Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=standby.subnet1.standbyvcn.oraclevcn.com)(PORT=1521)))
+   STATUS of the LISTENER
+   ------------------------
+   Alias                     LISTENER
+   Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+   Start Date                06-NOV-2020 02:32:00
+   Uptime                    0 days 0 hr. 0 min. 39 sec
+   Trace Level               off
+   Security                  ON: Local OS Authentication
+   SNMP                      OFF
+   Listener Parameter File   /u01/app/oracle/product/19c/dbhome_1/network/admin/listener.ora
+   Listener Log File         /u01/app/oracle/diag/tnslsnr/standby/listener/alert/log.xml
+   Listening Endpoints Summary...
+     (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=standby)(PORT=1521)))
+     (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=EXTPROC1521)))
+   The listener supports no services
+   The command completed successfully
+   LSNRCTL> exit
+   [oracle@standby ~]$ 
+   ```
 
- All files for the starter database have now been removed. 
+   
 
-
-
-## **Step 2:** Copy the Password File to the standby host 
-
-As **oracle** user, copy the primary database password file to the standby host `$ORACLE_HOME/dbs` directory. 
-
-1. Copy the following command.
-
-```
-<copy>scp oracle@primary:/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL $ORACLE_HOME/dbs</copy>
-```
-
-2. Run the command as **oracle** user.
-
-```
-[oracle@standby ~]$ scp oracle@primary:/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL $ORACLE_HOME/dbs
-orapwORCL 100% 2048    63.5KB/s   00:00    
-[oracle@standby ~]$
-```
-
-
-
-## **Step 3:** Configure Static Listeners 
+## **Step 2:** Configure Static Listeners 
 
 A static listener is needed for initial instantiation of a standby database. The static listener enables remote connection to an instance while the database is down in order to start a given instance. See MOS 1387859.1 for additional details.  A static listener for Data Guard Broker is optional. 
 
@@ -175,38 +125,42 @@ A static listener is needed for initial instantiation of a standby database. The
    ```
 
    - Add following lines into listener.ora
+   
+      ```
+      <copy>
+      SID_LIST_LISTENER=
+        (SID_LIST=
+          (SID_DESC=
+           (GLOBAL_DBNAME=ORCL)
+           (ORACLE_HOME=/u01/app/oracle/product/19c/dbhome_1)
+           (SID_NAME=ORCL)
+          )
+          (SID_DESC=
+           (GLOBAL_DBNAME=ORCL_DGMGRL)
+           (ORACLE_HOME=/u01/app/oracle/product/19c/dbhome_1)
+           (SID_NAME=ORCL)
+          )
+        )
+      </copy>
+      ```
+   
+   - Reload the listener.
+   
+      ```
+      [oracle@primary ~]$ lsnrctl reload
+      
+      LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 31-JAN-2020 11:27:23
+      
+      Copyright (c) 1991, 2019, Oracle.  All rights reserved.
+      
+      Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=workshop)(PORT=1521)))
+      The command completed successfully
+      [oracle@primary ~]$ 
+      ```
+   
+      
 
-```
-<copy>
-SID_LIST_LISTENER=
-  (SID_LIST=
-    (SID_DESC=
-     (GLOBAL_DBNAME=ORCL)
-     (ORACLE_HOME=/u01/app/oracle/product/19c/dbhome_1)
-     (SID_NAME=ORCL)
-    )
-    (SID_DESC=
-     (GLOBAL_DBNAME=ORCL_DGMGRL)
-     (ORACLE_HOME=/u01/app/oracle/product/19c/dbhome_1)
-     (SID_NAME=ORCL)
-    )
-  )
-</copy>
-```
 
-   - Reload the listener
-
-   ```
-   [oracle@primary ~]$ lsnrctl reload
-
-   LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 31-JAN-2020 11:27:23
-
-   Copyright (c) 1991, 2019, Oracle.  All rights reserved.
-
-   Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=workshop)(PORT=1521)))
-   The command completed successfully
-   [oracle@primary ~]$ 
-   ```
 
 2. From the standby side
 
@@ -217,69 +171,48 @@ SID_LIST_LISTENER=
    ```
 
    - Add following lines into listener.ora.
-
-```
-<copy>
-SID_LIST_LISTENER=
-  (SID_LIST=
-    (SID_DESC=
-     (GLOBAL_DBNAME=ORCLSTBY)
-     (ORACLE_HOME=/u01/app/oracle/product/19c/dbhome_1)
-     (SID_NAME=ORCL)
-    )
-    (SID_DESC=
-     (GLOBAL_DBNAME=ORCLSTBY_DGMGRL)
-     (ORACLE_HOME=/u01/app/oracle/product/19c/dbhome_1)
-     (SID_NAME=ORCL)
-    )
-  )
-</copy>
-```
-
+   
+      ```
+      <copy>
+      SID_LIST_LISTENER=
+        (SID_LIST=
+          (SID_DESC=
+           (GLOBAL_DBNAME=ORCLSTBY)
+           (ORACLE_HOME=/u01/app/oracle/product/19c/dbhome_1)
+           (SID_NAME=ORCL)
+          )
+          (SID_DESC=
+           (GLOBAL_DBNAME=ORCLSTBY_DGMGRL)
+           (ORACLE_HOME=/u01/app/oracle/product/19c/dbhome_1)
+           (SID_NAME=ORCL)
+          )
+        )
+      </copy>
+      ```
+   
+      
+   
    - Reload the listener
-
-   ```
-   [oracle@standby ~]$ lsnrctl reload
-
-   LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 31-JAN-2020 11:39:12
-
-   Copyright (c) 1991, 2019, Oracle.  All rights reserved.
-
-   Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=LISTENER)))
-   The command completed successfully
-   [oracle@standby ~]$ 
-   ```
-
-3. Mount the standby database.
-
-```
-[oracle@standby ~]$ sqlplus / as sysdba
-
-SQL*Plus: Release 19.0.0.0.0 - Production on Sat Feb 1 10:50:18 2020
-Version 19.7.0.0.0
-
-Copyright (c) 1982, 2019, Oracle.  All rights reserved.
-
-Connected to an idle instance.
-
-SQL> startup mount
-ORACLE instance started.
-
-Total System Global Area 1.6106E+10 bytes
-Fixed Size		    9154008 bytes
-Variable Size		 2080374784 bytes
-Database Buffers	 1.3992E+10 bytes
-Redo Buffers		   24399872 bytes
-Database mounted.
-SQL> exit
-Disconnected from Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
-[oracle@dbstby ~]$ 
-```
+   
+      ```
+      [oracle@standby ~]$ lsnrctl reload
+      
+      LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 31-JAN-2020 11:39:12
+      
+      Copyright (c) 1991, 2019, Oracle.  All rights reserved.
+      
+      Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=LISTENER)))
+      The command completed successfully
+      [oracle@standby ~]$
+      ```
+   
+      
 
 
 
-## **Step 4:** TNS Entries for Redo Transport 
+
+
+## **Step 3:** TNS Entries for Redo Transport 
 
 1. From the primary side, switch as **oracle** user, edit the `tnsnames.ora`
 
@@ -312,9 +245,22 @@ ORCLSTBY =
 vi $ORACLE_HOME/network/admin/tnsnames.ora
 ```
 
-Add the ORCL description to primary.  It's looks like the following. Save the file.  
+Add the following lines to the file.  It's looks like the following. Save the file.  
 
 ```
+<copy>
+LISTENER_ORCLSTBY =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = standby.subnet1.standbyvcn.oraclevcn.com)(PORT = 1521))
+  
+ORCLSTBY =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = standby.subnet1.standbyvcn.oraclevcn.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ORCLSTBY)
+    )
+  )
+  
 ORCL =
   (DESCRIPTION =
    (SDU=65536)
@@ -328,262 +274,323 @@ ORCL =
       (SERVICE_NAME = ORCL)
       (UR=A)
     )
-  )
+  )</copy>
 ```
 
 
 
-## **Step 5:** Instantiate the Standby Database 
+## **Step 4:** Duplicate the Database to Standby  
 
-The standby database can be created from the active primary database.
+The standby database can be duplicated from the primary database.
 
-1. From the standby side, switch to **oracle** user, create pdb directory,  If the directory exist, ignore the error
-
-```
-[oracle@standby ~]$ mkdir /u01/app/oracle/oradata/ORCLSTBY/pdbseed
-mkdir: cannot create directory '/u01/app/oracle/oradata/ORCLSTBY/pdbseed': File exists
-[oracle@standby ~]$ mkdir /u01/app/oracle/oradata/ORCLSTBY/orclpdb
-```
-
-2. Copy the following command.
+1. From the standby side, copy the password file from the primary side.
 
    ```
-   <copy>
-   alter system set db_file_name_convert='/u01/app/oracle/oradata/ORCL','/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
-   alter system set db_create_online_log_dest_1='/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
-   alter system set log_file_name_convert='/u01/app/oracle/oradata/ORCL','/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
-   alter system set db_name=ORCL scope=spfile;
-   alter system set db_unique_name=ORCLSTBY scope=spfile;
-   </copy>
+   [oracle@standby ~]$ scp oracle@primary:/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL $ORACLE_HOME/dbs
+   orapwORCL 100% 2048    63.5KB/s   00:00    
+   [oracle@standby ~]$
    ```
 
    
 
-3. Run the command in sqlplus as sysdba. This will modify the db and log file name convert parameter.
-
-```
-[oracle@standby ~]$ sqlplus / as sysdba
-
-SQL*Plus: Release 19.0.0.0.0 - Production on Tue Jun 23 02:46:13 2020
-Version 19.7.0.0.0
-
-Copyright (c) 1982, 2020, Oracle.  All rights reserved.
-
-
-Connected to:
-Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
-
-SQL> alter system set db_file_name_convert='/u01/app/oracle/oradata/ORCL','/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
-
-System altered.
-
-SQL> alter system set db_create_online_log_dest_1='/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
-
-System altered.
-
-SQL> alter system set log_file_name_convert='/u01/app/oracle/oradata/ORCL','/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
-
-System altered.
-
-SQL> alter system set db_name='ORCL' scope=spfile;
-
-System altered.
-
-SQL> alter system set db_unique_name=ORCLSTBY scope=spfile;
-
-System altered.
-```
-
-4. Shutdown the database, connect with RMAN. Then startup database nomount.
-
-```
-SQL> shutdown immediate
-ORA-01109: database not open
-
-
-Database dismounted.
-ORACLE instance shut down.
-
-SQL> exit
-Disconnected from Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
-[oracle@dbstby ~]$ rman target /
-
-Recovery Manager: Release 19.0.0.0.0 - Production on Fri Jan 31 12:41:27 2020
-Version 19.7.0.0.0
-
-Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
-
-connected to target database (not started)
-
-RMAN> startup nomount
-
-Oracle instance started
-
-Total System Global Area   16106126808 bytes
-
-Fixed Size                     9154008 bytes
-Variable Size               2181038080 bytes
-Database Buffers           13891534848 bytes
-Redo Buffers                  24399872 bytes
-
-RMAN> 
-```
-
-5. Restore control file from the primary database and mount the standby database.
-
-```
-RMAN> restore standby controlfile from service 'ORCL';
-
-Starting restore at 01-FEB-20
-using target database control file instead of recovery catalog
-allocated channel: ORA_DISK_1
-channel ORA_DISK_1: SID=11 device type=DISK
-
-channel ORA_DISK_1: starting datafile backup set restore
-channel ORA_DISK_1: using network backup set from service ORCL
-channel ORA_DISK_1: restoring control file
-channel ORA_DISK_1: restore complete, elapsed time: 00:00:02
-output file name=/u02/app/oracle/oradata/ORCL_nrt1d4/control01.ctl
-output file name=/u03/app/oracle/fast_recovery_area/ORCL_nrt1d4/control02.ctl
-Finished restore at 01-FEB-20
-
-RMAN> alter database mount;
-
-released channel: ORA_DISK_1
-Statement processed
-
-RMAN> 
-```
-
-6. Now, restore database from the primary database.
-
-```
-RMAN> restore database from service 'ORCL' section size 5G;
-
-Starting restore at 01-FEB-20
-Starting implicit crosscheck backup at 01-FEB-20
-allocated channel: ORA_DISK_1
-channel ORA_DISK_1: SID=17 device type=DISK
-Crosschecked 2 objects
-Finished implicit crosscheck backup at 01-FEB-20
-
-Starting implicit crosscheck copy at 01-FEB-20
-using channel ORA_DISK_1
-Finished implicit crosscheck copy at 01-FEB-20
-
-searching for all files in the recovery area
-cataloging files...
-cataloging done
-
-channel ORA_DISK_1: starting datafile backup set restore
-channel ORA_DISK_1: using network backup set from service ORCL
-channel ORA_DISK_1: specifying datafile(s) to restore from backup set
-channel ORA_DISK_1: restoring datafile 00001 to /u02/app/oracle/oradata/ORCL_nrt1d4/system01.dbf
-channel ORA_DISK_1: restoring section 1 of 1
-channel ORA_DISK_1: restore complete, elapsed time: 00:00:16
-channel ORA_DISK_1: starting datafile backup set restore
-channel ORA_DISK_1: using network backup set from service ORCL
-channel ORA_DISK_1: specifying datafile(s) to restore from backup set
-channel ORA_DISK_1: restoring datafile 00003 to /u02/app/oracle/oradata/ORCL_nrt1d4/sysaux01.dbf
-channel ORA_DISK_1: restoring section 1 of 1
-channel ORA_DISK_1: restore complete, elapsed time: 00:00:16
-channel ORA_DISK_1: starting datafile backup set restore
-channel ORA_DISK_1: using network backup set from service ORCL
-channel ORA_DISK_1: specifying datafile(s) to restore from backup set
-channel ORA_DISK_1: restoring datafile 00004 to /u02/app/oracle/oradata/ORCL_nrt1d4/undotbs01.dbf
-channel ORA_DISK_1: restoring section 1 of 1
-channel ORA_DISK_1: restore complete, elapsed time: 00:00:04
-channel ORA_DISK_1: starting datafile backup set restore
-channel ORA_DISK_1: using network backup set from service ORCL
-channel ORA_DISK_1: specifying datafile(s) to restore from backup set
-channel ORA_DISK_1: restoring datafile 00005 to /u02/app/oracle/oradata/ORCL_nrt1d4/pdbseed/system01.dbf
-......
-......
-channel ORA_DISK_1: restoring section 1 of 1
-channel ORA_DISK_1: restore complete, elapsed time: 00:00:02
-Finished restore at 01-FEB-20
-
-RMAN> 
-```
-
-7. Shutdown the database, connect to sqlplus as sysdba and mount the database again.
-
-```
-RMAN> shutdown immediate
-
-database dismounted
-Oracle instance shut down
-
-RMAN> exit
-
-
-Recovery Manager complete.
-
-[oracle@standby ~]$ sqlplus / as sysdba
-
-SQL*Plus: Release 19.0.0.0.0 - Production on Sat Feb 1 11:16:31 2020
-Version 19.7.0.0.0
-
-Copyright (c) 1982, 2019, Oracle.  All rights reserved.
-
-Connected to an idle instance.
-
-SQL> startup mount
-ORACLE instance started.
-
-Total System Global Area 1.6106E+10 bytes
-Fixed Size		    9154008 bytes
-Variable Size		 2080374784 bytes
-Database Buffers	 1.3992E+10 bytes
-Redo Buffers		   24399872 bytes
-Database mounted.
-SQL> 
-```
-
-
-
-## **Step 6:** Clear all online and standby redo logs 
-
-1. Copy the following command.
+2. From the standby side, create the database directory,  If the directory exist, ignore the error.
 
    ```
-   <copy>
-   set pagesize 0 feedback off linesize 120 trimspool on
-   spool /tmp/clearlogs.sql
-   select distinct 'alter database clear logfile group '||group#||';' from v$logfile;
-   spool off
-   @/tmp/clearlogs.sql
-   </copy>
+   mkdir /u01/app/oracle/oradata/ORCLSTBY
+   mkdir /u01/app/oracle/oradata/ORCLSTBY/pdbseed
+   mkdir /u01/app/oracle/oradata/ORCLSTBY/orclpdb
+   mkdir /u01/app/oracle/admin/ORCLSTBY
+   mkdir /u01/app/oracle/admin/ORCLSTBY/adump
+   mkdir /u01/app/oracle/admin/ORCLSTBY/dpdump
+   mkdir /u01/app/oracle/admin/ORCLSTBY/pfile
    ```
 
    
 
-2. Run the command in sqlplus as sysdba, this will clear or create new online and standby redo log, ignore the unknown command.
+2. Edit an init file.
 
-```
-SQL> set pagesize 0 feedback off linesize 120 trimspool on
-SQL> spool /tmp/clearlogs.sql
-SQL> select distinct 'alter database clear logfile group '||group#||';' from v$logfile;
-alter database clear logfile group 1;
-alter database clear logfile group 2;
-alter database clear logfile group 3;
-alter database clear logfile group 4;
-alter database clear logfile group 5;
-alter database clear logfile group 6;
-alter database clear logfile group 7;
-SQL> spool off
-SQL> @/tmp/clearlogs.sql
-SP2-0734: unknown command beginning "SQL> selec..." - rest of line ignored.
+   ```
+   [oracle@standby ~]$ vi /u01/app/oracle/product/19c/dbhome_1/dbs/initorclstby.ora
+   ```
+   
+   
+   
+3. Add the following lines into this file.
 
-SP2-0734: unknown command beginning "SQL> spool..." - rest of line ignored.
-SQL> 
-```
+   ```
+   DB_NAME=ORCL
+   DB_UNIQUE_NAME=ORCLSTBY
+   ```
+
+   
+
+4. Start the database in NOMOUNT status.
+
+   ```
+   [oracle@standby dbs]$ sqlplus / as sysdba
+   
+   SQL*Plus: Release 19.0.0.0.0 - Production on Fri Nov 6 04:13:11 2020
+   Version 19.7.0.0.0
+   
+   Copyright (c) 1982, 2020, Oracle.  All rights reserved.
+   
+   Connected to an idle instance.
+   
+   SQL> startup nomount pfile='/u01/app/oracle/product/19c/dbhome_1/dbs/initorclstby.ora'
+   ORACLE instance started.
+   
+   Total System Global Area  251656872 bytes
+   Fixed Size		    8895144 bytes
+   Variable Size		  184549376 bytes
+   Database Buffers	   50331648 bytes
+   Redo Buffers		    7880704 bytes
+   SQL> exit
+   ```
+
+   
+
+5. Connect with RMAN.
+
+   ```
+   [oracle@standby ~]$ rman target sys/Ora_DB4U@ORCL auxiliary sys/Ora_DB4U@ORCLSTBY
+   
+   Recovery Manager: Release 19.0.0.0.0 - Production on Fri Nov 6 04:19:38 2020
+   Version 19.7.0.0.0
+   
+   Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+   
+   connected to target database: ORCL (DBID=1583512061)
+   connected to auxiliary database: ORCL (not mounted)
+   
+   RMAN>
+   ```
+
+   
+
+6. Run the following command in RMAN to duplicate the database.
+
+   ```
+   run {
+   duplicate target database for standby from active database
+   spfile
+   parameter_value_convert 'ORCL','ORCLSTBY'
+   set db_name='ORCL'
+   set db_unique_name='ORCLSTBY'
+   set db_create_file_dest='/u01/app/oracle/oradata/ORCLSTBY'
+   set db_recovery_file_dest='/u01/app/oracle/oradata/ORCLSTBY'
+   set db_file_name_convert='/ORCL/','/ORCLSTBY/'
+   set log_file_name_convert='/ORCL/','/ORCLSTBY/'
+   ;
+   }
+   ```
+
+   
+
+7. The output like the following.
+
+   ```
+   RMAN> run {
+   duplicate target database for standby from active database
+   spfile
+   parameter_value_convert 'ORCL','ORCLSTBY'
+   set db_name='ORCL'
+   set db_unique_name='ORCLSTBY'
+   set db_create_file_dest='/u01/app/oracle/oradata/ORCLSTBY'
+   set db_recovery_file_dest='/u01/app/oracle/oradata/ORCLSTBY'
+   set db_file_name_convert='/ORCL/','/ORCLSTBY/'
+   set log_file_name_convert='/ORCL/','/ORCLSTBY/'
+   ;
+   }2> 3> 4> 5> 6> 7> 8> 9> 10> 11> 12> 
+   
+   Starting Duplicate Db at 06-NOV-20
+   using target database control file instead of recovery catalog
+   allocated channel: ORA_AUX_DISK_1
+   channel ORA_AUX_DISK_1: SID=21 device type=DISK
+   
+   contents of Memory Script:
+   {
+      backup as copy reuse
+      passwordfile auxiliary format  '/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL'   ;
+      restore clone from service  'ORCL' spfile to 
+    '/u01/app/oracle/product/19c/dbhome_1/dbs/spfileORCL.ora';
+      sql clone "alter system set spfile= ''/u01/app/oracle/product/19c/dbhome_1/dbs/spfileORCL.ora''";
+   }
+   executing Memory Script
+   
+   Starting backup at 06-NOV-20
+   allocated channel: ORA_DISK_1
+   channel ORA_DISK_1: SID=42 device type=DISK
+   Finished backup at 06-NOV-20
+   
+   Starting restore at 06-NOV-20
+   using channel ORA_AUX_DISK_1
+   
+   channel ORA_AUX_DISK_1: starting datafile backup set restore
+   channel ORA_AUX_DISK_1: using network backup set from service ORCL
+   channel ORA_AUX_DISK_1: restoring SPFILE
+   output file name=/u01/app/oracle/product/19c/dbhome_1/dbs/spfileORCL.ora
+   channel ORA_AUX_DISK_1: restore complete, elapsed time: 00:00:01
+   Finished restore at 06-NOV-20
+   
+   sql statement: alter system set spfile= ''/u01/app/oracle/product/19c/dbhome_1/dbs/spfileORCL.ora''
+   
+   contents of Memory Script:
+   {
+      sql clone "alter system set  audit_file_dest = 
+    ''/u01/app/oracle/admin/ORCLSTBY/adump'' comment=
+    '''' scope=spfile";
+   ......
+   
+      sql clone "alter system set  db_file_name_convert = 
+    ''/ORCL/'', ''/ORCLSTBY/'' comment=
+    '''' scope=spfile";
+      sql clone "alter system set  log_file_name_convert = 
+    ''/ORCL/'', ''/ORCLSTBY/'' comment=
+    '''' scope=spfile";
+      shutdown clone immediate;
+      startup clone nomount;
+   }
+   executing Memory Script
+   
+   sql statement: alter system set  audit_file_dest =  ''/u01/app/oracle/admin/ORCLSTBY/adump'' comment= '''' scope=spfile
+   
+   sql statement: alter system set  control_files =  ''/u01/app/oracle/oradata/ORCLSTBY/control01.ctl'', ''/u01/app/oracle/oradata/ORCLSTBY/control02.ctl'' comment= '''' scope=spfile
+   
+   sql statement: alter system set  dispatchers =  ''(PROTOCOL=TCP) (SERVICE=ORCLSTBYXDB)'' comment= '''' scope=spfile
+   
+   sql statement: alter system set  local_listener =  ''LISTENER_ORCLSTBY'' comment= '''' scope=spfile
+   
+   sql statement: alter system set  db_name =  ''ORCL'' comment= '''' scope=spfile
+   
+   sql statement: alter system set  db_unique_name =  ''ORCLSTBY'' comment= '''' scope=spfile
+   
+   sql statement: alter system set  db_create_file_dest =  ''/u01/app/oracle/oradata/ORCLSTBY'' comment= '''' scope=spfile
+   
+   sql statement: alter system set  db_recovery_file_dest =  ''/u01/app/oracle/oradata/ORCLSTBY'' comment= '''' scope=spfile
+   
+   sql statement: alter system set  db_file_name_convert =  ''/ORCL/'', ''/ORCLSTBY/'' comment= '''' scope=spfile
+   
+   sql statement: alter system set  log_file_name_convert =  ''/ORCL/'', ''/ORCLSTBY/'' comment= '''' scope=spfile
+   
+   Oracle instance shut down
+   
+   connected to auxiliary database (not started)
+   Oracle instance started
+   
+   Total System Global Area    4647286504 bytes
+   
+   Fixed Size                     9144040 bytes
+   Variable Size                855638016 bytes
+   Database Buffers            3774873600 bytes
+   Redo Buffers                   7630848 bytes
+   
+   contents of Memory Script:
+   {
+      restore clone from service  'ORCL' standby controlfile;
+   }
+   executing Memory Script
+   
+   Starting restore at 06-NOV-20
+   allocated channel: ORA_AUX_DISK_1
+   channel ORA_AUX_DISK_1: SID=18 device type=DISK
+   
+   channel ORA_AUX_DISK_1: starting datafile backup set restore
+   channel ORA_AUX_DISK_1: using network backup set from service ORCL
+   channel ORA_AUX_DISK_1: restoring control file
+   channel ORA_AUX_DISK_1: restore complete, elapsed time: 00:00:01
+   output file name=/u01/app/oracle/oradata/ORCLSTBY/control01.ctl
+   output file name=/u01/app/oracle/oradata/ORCLSTBY/control02.ctl
+   Finished restore at 06-NOV-20
+   
+   contents of Memory Script:
+   {
+      sql clone 'alter database mount standby database';
+   }
+   executing Memory Script
+   
+   sql statement: alter database mount standby database
+   
+   contents of Memory Script:
+   {
+      set newname for tempfile  1 to 
+    "/u01/app/oracle/oradata/ORCLSTBY/temp01.dbf";
+      set newname for tempfile  2 to 
+    "/u01/app/oracle/oradata/ORCLSTBY/pdbseed/temp012020-11-06_03-04-06-412-AM.dbf";
+   ......
+   
+      set newname for datafile  11 to 
+    "/u01/app/oracle/oradata/ORCLSTBY/orclpdb/undotbs01.dbf";
+      set newname for datafile  12 to 
+    "/u01/app/oracle/oradata/ORCLSTBY/orclpdb/users01.dbf";
+      restore
+      from  nonsparse   from service 
+    'ORCL'   clone database
+      ;
+      sql 'alter system archive log current';
+   }
+   executing Memory Script
+   
+   executing command: SET NEWNAME
+   
+   executing command: SET NEWNAME
+   
+   executing command: SET NEWNAME
+   
+   renamed tempfile 1 to /u01/app/oracle/oradata/ORCLSTBY/temp01.dbf in control file
+   renamed tempfile 2 to /u01/app/oracle/oradata/ORCLSTBY/pdbseed/temp012020-11-06_03-04-06-412-AM.dbf in control file
+   renamed tempfile 3 to /u01/app/oracle/oradata/ORCLSTBY/orclpdb/temp01.dbf in control file
+   
+   executing command: SET NEWNAME
+   ......
+   
+   executing command: SET NEWNAME
+   
+   Starting restore at 06-NOV-20
+   using channel ORA_AUX_DISK_1
+   
+   channel ORA_AUX_DISK_1: starting datafile backup set restore
+   channel ORA_AUX_DISK_1: using network backup set from service ORCL
+   channel ORA_AUX_DISK_1: specifying datafile(s) to restore from backup set
+   channel ORA_AUX_DISK_1: restoring datafile 00001 to /u01/app/oracle/oradata/ORCLSTBY/system01.dbf
+   channel ORA_AUX_DISK_1: restore complete, elapsed time: 00:00:15
+   ......
+   
+   channel ORA_AUX_DISK_1: using network backup set from service ORCL
+   channel ORA_AUX_DISK_1: specifying datafile(s) to restore from backup set
+   channel ORA_AUX_DISK_1: restoring datafile 00012 to /u01/app/oracle/oradata/ORCLSTBY/orclpdb/users01.dbf
+   channel ORA_AUX_DISK_1: restore complete, elapsed time: 00:00:01
+   Finished restore at 06-NOV-20
+   
+   sql statement: alter system archive log current
+   
+   contents of Memory Script:
+   {
+      switch clone datafile all;
+   }
+   executing Memory Script
+   
+   datafile 1 switched to datafile copy
+   input datafile copy RECID=4 STAMP=1055745153 file name=/u01/app/oracle/oradata/ORCLSTBY/system01.dbf
+   datafile 3 switched to datafile copy
+   input datafile copy RECID=5 STAMP=1055745153 file name=/u01/app/oracle/oradata/ORCLSTBY/sysaux01.dbf
+   datafile 4 switched to datafile copy
+   ......
+   
+   input datafile copy RECID=13 STAMP=1055745154 file name=/u01/app/oracle/oradata/ORCLSTBY/orclpdb/undotbs01.dbf
+   datafile 12 switched to datafile copy
+   input datafile copy RECID=14 STAMP=1055745154 file name=/u01/app/oracle/oradata/ORCLSTBY/orclpdb/users01.dbf
+   Finished Duplicate Db at 06-NOV-20
+   
+   RMAN> 
+   ```
+
+8. Exit the RMAN.
 
 
 
-## **Step 7:** Configure Data Guard broker
+
+
+## **Step 5:** Configure Data Guard broker
 
 1. Copy the following command.
 
@@ -598,7 +605,7 @@ SQL>
 
    
 
-2. Run the command on the primary and the standby database to enable the data guard broker.
+2. Run the command as sysdba on the primary and the standby database to enable the data guard broker.
 
 - From the primary side,
 
@@ -660,7 +667,7 @@ DMON
 SQL> 
 ```
 
-3. Register the database via DGMGRL. 
+3. Register the database via DGMGRL. You can run the DGMGRL command from primary site or standby site.
 
 ```
 [oracle@primary ~]$ dgmgrl sys/Ora_DB4U@ORCL
@@ -702,7 +709,7 @@ You may proceed to the next lab.
 ## Acknowledgements
 * **Author** - Minqiao Wang, DB Product Management, Oct 2020
 * **Contributors** -  
-* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Oct 2020
+* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Nov 2020
 
 ## See an issue?
 Please submit feedback using this [form](https://apexapps.oracle.com/pls/apex/f?p=133:1:::::P1_FEEDBACK:1). Please include the *workshop name*, *lab* and *step* in your request.  If you don't see the workshop name listed, please enter it manually. If you would like us to follow up with you, enter your email in the *Feedback Comments* section.

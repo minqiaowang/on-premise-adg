@@ -73,17 +73,17 @@ AllowUsers opc
 <copy>sudo vi /etc/hosts</copy>
 ```
 
-    - From the primary side, add the standby host **public ip** and host name in the file like the following:
+      - From the primary side, add the standby host **public ip** and host name in the file like the following:
 
-    ```
-    xxx.xxx.xxx.xxx  standby.subnet1.standbyvcn.oraclevcn.com standby
-    ```
+      ```
+      xxx.xxx.xxx.xxx  standby.subnet1.standbyvcn.oraclevcn.com standby
+      ```
     
-    - From the standby side, add the primary host **public ip** and host name in the file like the following:
+      - From the standby side, add the primary host **public ip** and host name in the file like the following:
 
-    ```
-    xxx.xxx.xxx.xxx primary.subnet1.primaryvcn.oraclevcn.com primary
-    ```
+      ```
+      xxx.xxx.xxx.xxx primary.subnet1.primaryvcn.oraclevcn.com primary
+      ```
 
 2. Validate the connectivity, install telnet on both sides.
 
@@ -91,33 +91,33 @@ AllowUsers opc
 <copy>sudo yum -y install telnet</copy>
 ```
 
-    - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exit. 
+      - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exit. 
 
-    ```
-     $ telnet standby 1521
-     Trying 158.101.136.61...
-     Connected to 158.101.136.61.
-     Escape character is '^]'.
-     ^]
+      ```
+      $ telnet standby 1521
+      Trying 158.101.136.61...
+      Connected to 158.101.136.61.
+      Escape character is '^]'.
+      ^]
          
-    telnet> q
-     Connection closed.
-     $ 
-     ```
+      telnet> q
+      Connection closed.
+      $ 
+      ```
 
-    - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exit. 
+      - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exit. 
 
-    ```
-     $ telnet primary 1521
-     Trying 140.238.18.190...
-     Connected to 140.238.18.190.
-     Escape character is '^]'.
-     ^]
+      ```
+      $ telnet primary 1521
+      Trying 140.238.18.190...
+      Connected to 140.238.18.190.
+      Escape character is '^]'.
+      ^]
          
-    telnet> q
-     Connection closed.
-     $
-     ```
+      telnet> q
+      Connection closed.
+      $
+      ```
 
 
 
@@ -300,7 +300,7 @@ You may proceed to the next lab.
 ## Acknowledgements
 * **Author** - Minqiao Wang, DB Product Management, Oct 2020
 * **Contributors** -  
-* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Oct 2020
+* **Last Updated By/Date** - Minqiao Wang, DB Product Management, Nov 2020
 
 ## See an issue?
 Please submit feedback using this [form](https://apexapps.oracle.com/pls/apex/f?p=133:1:::::P1_FEEDBACK:1). Please include the *workshop name*, *lab* and *step* in your request.  If you don't see the workshop name listed, please enter it manually. If you would like us to follow up with you, enter your email in the *Feedback Comments* section.
