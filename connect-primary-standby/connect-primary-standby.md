@@ -69,29 +69,33 @@ AllowUsers opc
 
 1. Connect as the opc user. Edit `/etc/hosts` on both sides.
 
-```
-<copy>sudo vi /etc/hosts</copy>
-```
+   ```
+   <copy>sudo vi /etc/hosts</copy>
+   ```
 
-      - From the primary side, add the standby host **public ip** and host name in the file like the following:
+   - From the primary side, add the standby host public ip and host name in the file like the following:
 
       ```
       xxx.xxx.xxx.xxx  standby.subnet1.standbyvcn.oraclevcn.com standby
       ```
-    
-      - From the standby side, add the primary host **public ip** and host name in the file like the following:
+
+      
+
+   - From the standby side, add the primary host public ip and host name in the file like the following:
 
       ```
       xxx.xxx.xxx.xxx primary.subnet1.primaryvcn.oraclevcn.com primary
       ```
 
+      
+
 2. Validate the connectivity, install telnet on both sides.
 
-```
-<copy>sudo yum -y install telnet</copy>
-```
+   ```
+   <copy>sudo yum -y install telnet</copy>
+   ```
 
-      - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exit. 
+   - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exit.
 
       ```
       $ telnet standby 1521
@@ -99,13 +103,15 @@ AllowUsers opc
       Connected to 158.101.136.61.
       Escape character is '^]'.
       ^]
-         
+           
       telnet> q
       Connection closed.
       $ 
       ```
 
-      - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exit. 
+      
+
+   - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exit.
 
       ```
       $ telnet primary 1521
@@ -113,11 +119,13 @@ AllowUsers opc
       Connected to 140.238.18.190.
       Escape character is '^]'.
       ^]
-         
+           
       telnet> q
       Connection closed.
       $
       ```
+
+      
 
 
 
@@ -143,7 +151,7 @@ net.core.wmem_max = 134217728
 3. Reload and check the values.
 
 ```
-[opc@primaray ~]$ sudo /sbin/sysctl -p
+$ sudo /sbin/sysctl -p
 fs.file-max = 6815744
 kernel.sem = 250 32000 100 128
 kernel.shmmni = 4096
@@ -158,14 +166,15 @@ net.ipv4.conf.all.rp_filter = 2
 net.ipv4.conf.default.rp_filter = 2
 fs.aio-max-nr = 1048576
 net.ipv4.ip_local_port_range = 9000 65500
-[opc@adgstudent1 ~]$ sudo /sbin/sysctl -a | egrep net.core.[w,r]mem_max
+
+$ sudo /sbin/sysctl -a | egrep net.core.[w,r]mem_max
 net.core.rmem_max = 134217728
 net.core.wmem_max = 134217728
 sysctl: reading key "net.ipv6.conf.all.stable_secret"
 sysctl: reading key "net.ipv6.conf.default.stable_secret"
 sysctl: reading key "net.ipv6.conf.ens3.stable_secret"
 sysctl: reading key "net.ipv6.conf.lo.stable_secret"
-[opc@primary ~]$ 
+$ 
 ```
 
 
