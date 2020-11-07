@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this lab you will setup 2 Oracle Cloud network (VCNs) and 2 compute instances with a pre-configured Oracle Database 19c using Oracle Resource Manager and Terraform. One simulate the primary site and another simulate the standby site. You can setup the primary and standby database using the related scripts. The primary and the standby database are in different VCN. You can setup primary and standby database in the same region or in different region.
+In this lab you will setup 2 Oracle Cloud network (VCNs) and 2 compute instances using Oracle Resource Manager and Terraform. One simulate the primary site and another simulate the standby site. You can setup the primary and standby hosts using the related scripts. The primary and the standby hosts are in different VCN. You can setup primary and standby hosts in the same region or in different region.
 
 Estimated Lab Time: 60 minutes.
 

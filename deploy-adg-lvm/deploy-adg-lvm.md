@@ -1,7 +1,7 @@
 # Deploy ADG Process
 
 ## Introduction
-In this lab you will setup Data Guard from a Single Instance database to another Single Instance database. 
+In this lab you will setup Active Data Guard from a Single Instance database to another Single Instance database. 
 
 Estimated Lab Time: 30 minutes.
 
@@ -248,11 +248,10 @@ A static listener is needed for initial instantiation of a standby database. The
 Add following lines into tnsnames.ora. Save the file.
 
 ```
+<copy>
 ORCLSTBY =
   (DESCRIPTION =
    (SDU=65536)
-   (RECV_BUF_SIZE=134217728)
-   (SEND_BUF_SIZE=134217728)
    (ADDRESS_LIST =
     (ADDRESS = (PROTOCOL = TCP)(HOST = standby)(PORT = 1521))
    )
@@ -261,7 +260,7 @@ ORCLSTBY =
       (SERVICE_NAME = ORCLSTBY)
       (UR=A)
     )
-  )
+  )</copy>
 ```
 
 2. From the standby side, switch as **oracle** user, edit the `tnsnames.ora`
@@ -289,8 +288,6 @@ ORCLSTBY =
 ORCL =
   (DESCRIPTION =
    (SDU=65536)
-   (RECV_BUF_SIZE=134217728)
-   (SEND_BUF_SIZE=134217728)
    (ADDRESS_LIST =
     (ADDRESS = (PROTOCOL = TCP)(HOST = primary)(PORT = 1521))
    )
@@ -311,23 +308,23 @@ The standby database can be duplicated from the primary database.
 1. From the standby side, copy the password file from the primary side.
 
    ```
-   [oracle@standby ~]$ scp oracle@primary:/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL $ORACLE_HOME/dbs
+   [oracle@standby ~]$ <copy>scp oracle@primary:/u01/app/oracle/product/19c/dbhome_1/dbs/orapwORCL $ORACLE_HOME/dbs</copy>
    orapwORCL 100% 2048    63.5KB/s   00:00    
    [oracle@standby ~]$
    ```
 
    
 
-2. From the standby side, create the database directory,  If the directory exist, ignore the error.
+2. From the standby side, create the database directory.
 
    ```
-   mkdir /u01/app/oracle/oradata/ORCLSTBY
-   mkdir /u01/app/oracle/oradata/ORCLSTBY/pdbseed
-   mkdir /u01/app/oracle/oradata/ORCLSTBY/orclpdb
-   mkdir /u01/app/oracle/admin/ORCLSTBY
-   mkdir /u01/app/oracle/admin/ORCLSTBY/adump
-   mkdir /u01/app/oracle/admin/ORCLSTBY/dpdump
-   mkdir /u01/app/oracle/admin/ORCLSTBY/pfile
+   <copy>
+   mkdir -p /u01/app/oracle/oradata/ORCLSTBY/pdbseed
+   mkdir -p /u01/app/oracle/oradata/ORCLSTBY/orclpdb
+   mkdir -p /u01/app/oracle/admin/ORCLSTBY/adump
+   mkdir -p /u01/app/oracle/admin/ORCLSTBY/dpdump
+   mkdir -p /u01/app/oracle/admin/ORCLSTBY/pfile
+   </copy>
    ```
 
    
@@ -335,7 +332,7 @@ The standby database can be duplicated from the primary database.
 2. Edit an init file.
 
    ```
-   [oracle@standby ~]$ vi /u01/app/oracle/product/19c/dbhome_1/dbs/initorclstby.ora
+   [oracle@standby ~]$ <copy>vi /u01/app/oracle/product/19c/dbhome_1/dbs/initorclstby.ora</copy>
    ```
    
    
@@ -343,13 +340,15 @@ The standby database can be duplicated from the primary database.
 3. Add the following lines into this file.
 
    ```
+   <copy>
    DB_NAME=ORCL
    DB_UNIQUE_NAME=ORCLSTBY
+   </copy>
    ```
 
    
 
-4. Start the database in NOMOUNT status.
+4. Start the database in NOMOUNT status using the init parameter file you create in the previous step.
 
    ```
    [oracle@standby dbs]$ sqlplus / as sysdba
@@ -377,7 +376,7 @@ The standby database can be duplicated from the primary database.
 5. Connect with RMAN.
 
    ```
-   [oracle@standby ~]$ rman target sys/Ora_DB4U@ORCL auxiliary sys/Ora_DB4U@ORCLSTBY
+   [oracle@standby ~]$ <copy>rman target sys/Ora_DB4U@ORCL auxiliary sys/Ora_DB4U@ORCLSTBY</copy>
    
    Recovery Manager: Release 19.0.0.0.0 - Production on Fri Nov 6 04:19:38 2020
    Version 19.7.0.0.0
@@ -395,6 +394,7 @@ The standby database can be duplicated from the primary database.
 6. Run the following command in RMAN to duplicate the database.
 
    ```
+   <copy>
    run {
    duplicate target database for standby from active database
    spfile
@@ -406,7 +406,7 @@ The standby database can be duplicated from the primary database.
    set db_file_name_convert='/ORCL/','/ORCLSTBY/'
    set log_file_name_convert='/ORCL/','/ORCLSTBY/'
    ;
-   }
+   }</copy>
    ```
 
    

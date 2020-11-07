@@ -424,12 +424,12 @@ SQL> insert into test values(2,'line2');
 
 1 row created.
 
-Elapsed: 00:00:26.13
+Elapsed: 00:00:10.26
 SQL> commit;
 
 Commit complete.
 
-Elapsed: 00:00:21.12
+Elapsed: 00:00:04.12
 SQL> select * from test;
 
 	 A B

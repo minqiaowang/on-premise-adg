@@ -9,7 +9,6 @@ Estimated Lab Time: 30 minutes.
 - Open the 1521 port for both hosts.
 - Enable ssh connect for the oracle user.
 - Configure the Name Resolution.
-- Set TCP socket size for performance.
 - Prompt-less SSH configure.
 
 ### Prerequisites
@@ -73,27 +72,22 @@ AllowUsers opc
    <copy>sudo vi /etc/hosts</copy>
    ```
 
-   - From the primary side, add the standby host public ip and host name in the file like the following:
+   
 
-      ```
-      xxx.xxx.xxx.xxx  standby.subnet1.standbyvcn.oraclevcn.com standby
-      ```
-
-      
-
-   - From the standby side, add the primary host public ip and host name in the file like the following:
-
-      ```
-      xxx.xxx.xxx.xxx primary.subnet1.primaryvcn.oraclevcn.com primary
-      ```
-
-      
-
-2. Validate the connectivity, install telnet on both sides.
+2. Add the primary and standby host public ip and hostname in the file like the following:
 
    ```
+   xxx.xxx.xxx.xxx primary.subnet1.primaryvcn.oraclevcn.com primary
+   xxx.xxx.xxx.xxx  standby.subnet1.standbyvcn.oraclevcn.com standby
+   ```
+
+   
+
+3. Validate the connectivity, install telnet on both sides.
+
+   ````
    <copy>sudo yum -y install telnet</copy>
-   ```
+   ````
 
    - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exit.
 
@@ -129,56 +123,8 @@ AllowUsers opc
 
 
 
-## **Step 4:** Set TCP socket size
 
-According to the best practice, set TCP socket size, adjust all socket size maximums to 128MB or 134217728. This is needed to setup in both primary and standby side.  
-
-1. From both side, connect as **opc** user, edit the config file.
-
-```
-<copy>sudo vi /etc/sysctl.conf</copy>
-```
-
-2. Search and modify following entry to the values, save and exit.
-
-```
-<copy>
-net.core.rmem_max = 134217728 
-net.core.wmem_max = 134217728
-</copy>
-```
-
-3. Reload and check the values.
-
-```
-$ sudo /sbin/sysctl -p
-fs.file-max = 6815744
-kernel.sem = 250 32000 100 128
-kernel.shmmni = 4096
-kernel.shmall = 1073741824
-kernel.shmmax = 4398046511104
-kernel.panic_on_oops = 1
-net.core.rmem_default = 262144
-net.core.rmem_max = 134217728
-net.core.wmem_default = 262144
-net.core.wmem_max = 134217728
-net.ipv4.conf.all.rp_filter = 2
-net.ipv4.conf.default.rp_filter = 2
-fs.aio-max-nr = 1048576
-net.ipv4.ip_local_port_range = 9000 65500
-
-$ sudo /sbin/sysctl -a | egrep net.core.[w,r]mem_max
-net.core.rmem_max = 134217728
-net.core.wmem_max = 134217728
-sysctl: reading key "net.ipv6.conf.all.stable_secret"
-sysctl: reading key "net.ipv6.conf.default.stable_secret"
-sysctl: reading key "net.ipv6.conf.ens3.stable_secret"
-sysctl: reading key "net.ipv6.conf.lo.stable_secret"
-$ 
-```
-
-
-## **Step 5:** Prompt-less SSH configure
+## **Step 4:** Prompt-less SSH configure
 
 Now you will configure the prompt-less ssh for oracle users between the primary and the standby.
 
