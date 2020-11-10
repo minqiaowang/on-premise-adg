@@ -1,7 +1,7 @@
 # Introduction
 
 ## About this Workshop
-In this Lab, You will learn how to setup Active Data Guard. You will using a compute instance in OCI to simulate the primary database, which is deployed in one region (For example: Seoul). Another compute instance in OCI to simulate the standby database which is deployed in another region (For example: Tokyo). The primary and the standby database communicate through public internet. 
+In this Lab, You will learn how to setup Active Data Guard. You will using a compute instance in OCI to simulate the primary database, which is deployed in one region (For example: Seoul). Another compute instance in OCI to simulate the standby database which can be deployed in another region (For example: Tokyo). The primary and the standby database communicate through public internet. 
 
 Estimated Lab Time: 4 hours. 
 
