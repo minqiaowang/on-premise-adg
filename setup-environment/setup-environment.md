@@ -18,7 +18,7 @@ This lab assumes you have already completed the following:
 
 Click on the link below to download the Resource Manager zip files you need to build your enviornment.
 
-- [db19c-primary-num.zip](https://objectstorage.us-ashburn-1.oraclecloud.com/p/hjoSts4QD56z3RLS-gl3RuyiPESRs9bSxfsKzdIYFAJ339ZgG-EXarwIiQM5xF5T/n/c4u03/b/data-management-library-files/o/db19c-primary-num.zip) - Packaged terraform primary database instance creation script
+- [db19c-primary-num.zip](https://objectstorage.us-ashburn-1.oraclecloud.com/p/jZm0eTFHotQifVuvYWHtnJA5ydhI6dhh1p-nOR1pKvFLjEEtc_kI-tvNux0Dr-ek/n/c4u03/b/data-management-library-files/o/db19c-primary-num.zip) - Packaged terraform primary database instance creation script
 - [db19c-standby-nodb.zip](https://github.com/minqiaowang/on-premise-adg/raw/master/setup-environment/db19c-standby-nodb.zip) - Packaged terraform standby database instance creation script
 
 
@@ -211,6 +211,7 @@ You may proceed to the next lab.
 * **Author** - Minqiao Wang, DB Product Management, Oct 2020
 * **Contributors** -  
 * **Last Updated By/Date** - Minqiao Wang, DB Product Management, Nov 2020
+* **Workshop Expiry Date** - Nov 30, 2021
 
 ## See an issue?
 Please submit feedback using this [form](https://apexapps.oracle.com/pls/apex/f?p=133:1:::::P1_FEEDBACK:1). Please include the *workshop name*, *lab* and *step* in your request.  If you don't see the workshop name listed, please enter it manually. If you would like us to follow up with you, enter your email in the *Feedback Comments* section.
