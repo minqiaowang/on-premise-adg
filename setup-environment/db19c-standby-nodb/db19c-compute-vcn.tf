@@ -106,7 +106,27 @@ resource "oci_core_default_security_list" "default-security-list" {
   }
 }
 
+##
+# Found image id from Marketplace and get signature
+##
+#    Resource Elements
+resource "oci_core_app_catalog_subscription" "generated_oci_core_app_catalog_subscription" {
+	compartment_id = "${var.compartment_ocid}"
+	eula_link = "${oci_core_app_catalog_listing_resource_version_agreement.generated_oci_core_app_catalog_listing_resource_version_agreement.eula_link}"
+	listing_id = "${oci_core_app_catalog_listing_resource_version_agreement.generated_oci_core_app_catalog_listing_resource_version_agreement.listing_id}"
+	listing_resource_version = "Oracle_Database_19.10.0.0.210119_-_OL7U9"
+	oracle_terms_of_use_link = "${oci_core_app_catalog_listing_resource_version_agreement.generated_oci_core_app_catalog_listing_resource_version_agreement.oracle_terms_of_use_link}"
+	signature = "${oci_core_app_catalog_listing_resource_version_agreement.generated_oci_core_app_catalog_listing_resource_version_agreement.signature}"
+	time_retrieved = "${oci_core_app_catalog_listing_resource_version_agreement.generated_oci_core_app_catalog_listing_resource_version_agreement.time_retrieved}"
+}
 
+resource "oci_core_app_catalog_listing_resource_version_agreement" "generated_oci_core_app_catalog_listing_resource_version_agreement" {
+	listing_id = "ocid1.appcataloglisting.oc1..aaaaaaaaheuwo4wunrr4eqn6hab36sgeur5xb25nbs5v4f4w3cytjcqysurq"
+	listing_resource_version = "Oracle_Database_19.10.0.0.210119_-_OL7U9"
+}
+
+
+# Compute Instances
 
 resource "oci_core_instance" "ssworkshop_instance" {
  // count               = "${var.num_instances}"
@@ -124,7 +144,7 @@ resource "oci_core_instance" "ssworkshop_instance" {
 
   source_details {
     source_type = "image"
-    source_id   = "${var.Image-Id}"
+    source_id   = "ocid1.image.oc1..aaaaaaaae27qas3nmkx2pjngxacb7jj5yhxop7nxego2pfjen47xjtrjucqa"
 
   }
 
@@ -132,7 +152,9 @@ resource "oci_core_instance" "ssworkshop_instance" {
     ssh_authorized_keys = "${var.ssh_public_key}"
     user_data           = "${base64encode(file("custom-db.sh"))}"
   }
-
+  depends_on = [
+		oci_core_app_catalog_subscription.generated_oci_core_app_catalog_subscription
+	]
 }
 
 output "primary_public_ips" {
