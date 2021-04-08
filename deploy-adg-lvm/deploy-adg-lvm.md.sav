@@ -52,14 +52,14 @@ To manually delete the database on the standby host, run the steps below.
 [oracle@standby ~]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Tue Jun 23 04:37:00 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2020, Oracle.  All rights reserved.
 
 
 Connected to:
 Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 SQL> select DB_UNIQUE_NAME from v$database;
 
@@ -121,7 +121,7 @@ Database dismounted.
 ORACLE instance shut down.
 SQL> exit
 Disconnected from Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 [oracle@standby ~]$ 
 ```
 
@@ -256,7 +256,7 @@ SID_LIST_LISTENER=
 [oracle@standby ~]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Sat Feb 1 10:50:18 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2019, Oracle.  All rights reserved.
 
@@ -273,7 +273,7 @@ Redo Buffers		   24399872 bytes
 Database mounted.
 SQL> exit
 Disconnected from Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 [oracle@dbstby ~]$ 
 ```
 
@@ -365,14 +365,14 @@ mkdir: cannot create directory '/u01/app/oracle/oradata/ORCLSTBY/pdbseed': File 
 [oracle@standby ~]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Tue Jun 23 02:46:13 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2020, Oracle.  All rights reserved.
 
 
 Connected to:
 Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 SQL> alter system set db_file_name_convert='/u01/app/oracle/oradata/ORCL','/u01/app/oracle/oradata/ORCLSTBY' scope=spfile;
 
@@ -407,11 +407,11 @@ ORACLE instance shut down.
 
 SQL> exit
 Disconnected from Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 [oracle@dbstby ~]$ rman target /
 
 Recovery Manager: Release 19.0.0.0.0 - Production on Fri Jan 31 12:41:27 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
 
@@ -524,7 +524,7 @@ Recovery Manager complete.
 [oracle@standby ~]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Sat Feb 1 11:16:31 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2019, Oracle.  All rights reserved.
 
@@ -665,7 +665,7 @@ SQL>
 ```
 [oracle@primary ~]$ dgmgrl sys/Ora_DB4U@ORCL
 DGMGRL for Linux: Release 19.0.0.0.0 - Production on Sat Feb 1 03:51:49 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
 

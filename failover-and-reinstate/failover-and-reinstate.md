@@ -27,14 +27,14 @@ In the previous lab, you have done the Data Guard switch over. Now, the current 
 [oracle@standby ~]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Wed Feb 5 05:31:25 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2019, Oracle.  All rights reserved.
 
 
 Connected to:
 Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 SQL> select open_mode,database_role,flashback_on from v$database;
 
@@ -91,7 +91,7 @@ READ WRITE	     PRIMARY	      YES
 
 SQL> exit
 Disconnected from Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 [oracle@dbstby ~]$ 
 ```
 
@@ -102,7 +102,7 @@ Version 19.7.0.0.0
 ```
 [oracle@standby ~]$ dgmgrl sys/Ora_DB4U@orcl
 DGMGRL for Linux: Release 19.0.0.0.0 - Production on Wed Feb 5 05:41:24 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
 
@@ -191,56 +191,34 @@ Now, the primary is the back to the **ORCL** database, and the standby database 
 
 ## **Step 3:** Reinstate the previous primary database
 
-1. In the current standby side, connect to sqlplus as sysdba, shutdown the database and startup mount before reinstating. 
+1. Connect  to the current standby database, shutdown the database and startup mount before reinstating. 
 
 ```
-[oracle@standby ~]$ sqlplus / as sysdba  
-
-SQL*Plus: Release 19.0.0.0.0 - Production on Wed Feb 5 05:48:11 2020
-Version 19.7.0.0.0
-
-Copyright (c) 1982, 2019, Oracle.  All rights reserved.
-
-
-Connected to:
-Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
-
-SQL> shutdown immediate
+DGMGRL> <copy>connect sys/Ora_DB4U@orclstby</copy>
+Connected to "ORCL_nrt1d4"
+Connected as SYSDBA.
+DGMGRL> <copy>shutdown immediate</copy>
 Database closed.
 Database dismounted.
 ORACLE instance shut down.
-SQL> startup mount
+Connected to an idle instance.
+DGMGRL> <copy>startup mount</copy>
+Connected to "ORCL_nrt1d4"
 ORACLE instance started.
-
-Total System Global Area 1.6106E+10 bytes
-Fixed Size		    9154008 bytes
-Variable Size		 2080374784 bytes
-Database Buffers	 1.3992E+10 bytes
-Redo Buffers		   24399872 bytes
 Database mounted.
-SQL> exit
-Disconnected from Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
-[oracle@standby ~]$  
+DGMGRL>   
 ```
 
-2. Reinstate the database.
+2. Connect to the new primary side, reinstate the standby database.
 
 ```
-[oracle@standby ~]$ dgmgrl sys/Ora_DB4U@orcl
-DGMGRL for Linux: Release 19.0.0.0.0 - Production on Tue Jun 23 06:06:36 2020
-Version 19.7.0.0.0
-
-Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
-
-Welcome to DGMGRL, type "help" for information.
+DGMGRL> <copy>connect sys/Ora_DB4U@orcl</copy>
 Connected to "ORCL"
 Connected as SYSDBA.
 DGMGRL> reinstate database orclstby
 Reinstating database "orclstby", please wait...
 Reinstatement of database "orclstby" succeeded
-DGMGRL> show configuration
+DGMGRL> <copy>show configuration</copy>
 
 Configuration - adgconfig
 
@@ -254,7 +232,7 @@ Fast-Start Failover:  Disabled
 Configuration Status:
 SUCCESS   (status updated 21 seconds ago)
 
-DGMGRL> exit
+DGMGRL>
 ```
 If you encounter the Warning: ORA-16809: multiple warnings detected for the member or Warning: ORA-16854: apply lag could not be determined. Wait some time and show configuration again.
 
@@ -264,14 +242,14 @@ If you encounter the Warning: ORA-16809: multiple warnings detected for the memb
 [oracle@standby ~]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Wed Feb 5 05:53:48 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2019, Oracle.  All rights reserved.
 
 
 Connected to:
 Oracle Database 19c EE Extreme Perf Release 19.0.0.0.0 - Production
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 SQL> select open_mode,database_role from v$database;
 

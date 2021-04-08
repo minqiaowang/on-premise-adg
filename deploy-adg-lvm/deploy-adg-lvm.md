@@ -354,7 +354,7 @@ The standby database can be duplicated from the primary database.
    [oracle@standby dbs]$ sqlplus / as sysdba
    
    SQL*Plus: Release 19.0.0.0.0 - Production on Fri Nov 6 04:13:11 2020
-   Version 19.7.0.0.0
+   Version 19.10.0.0.0
    
    Copyright (c) 1982, 2020, Oracle.  All rights reserved.
    
@@ -379,7 +379,7 @@ The standby database can be duplicated from the primary database.
    [oracle@standby ~]$ <copy>rman target sys/Ora_DB4U@ORCL auxiliary sys/Ora_DB4U@ORCLSTBY</copy>
    
    Recovery Manager: Release 19.0.0.0.0 - Production on Fri Nov 6 04:19:38 2020
-   Version 19.7.0.0.0
+   Version 19.10.0.0.0
    
    Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
    
@@ -697,7 +697,7 @@ SQL>
 ```
 [oracle@primary ~]$ dgmgrl sys/Ora_DB4U@ORCL
 DGMGRL for Linux: Release 19.0.0.0.0 - Production on Sat Feb 1 03:51:49 2020
-Version 19.7.0.0.0
+Version 19.10.0.0.0
 
 Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
 
