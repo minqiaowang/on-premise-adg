@@ -83,45 +83,6 @@ AllowUsers opc
 
    
 
-3. Validate the connectivity, install telnet on both sides.
-
-   ````
-   <copy>sudo yum -y install telnet</copy>
-   ````
-
-   - From the primary side, telnet the public ip or hostname of the standby host with port 1521, enter `^]` and return to exit.
-
-      ```
-      $ telnet standby 1521
-      Trying 158.101.136.61...
-      Connected to 158.101.136.61.
-      Escape character is '^]'.
-      ^]
-           
-      telnet> q
-      Connection closed.
-      $ 
-      ```
-
-      
-
-   - From the standby side, telnet the public ip or hostname of the primary host with port 1521, enter `^]` and return to exit.
-
-      ```
-      $ telnet primary 1521
-      Trying 140.238.18.190...
-      Connected to 140.238.18.190.
-      Escape character is '^]'.
-      ^]
-           
-      telnet> q
-      Connection closed.
-      $
-      ```
-
-      
-
-
 
 
 ## **Step 4:** Prompt-less SSH configure
