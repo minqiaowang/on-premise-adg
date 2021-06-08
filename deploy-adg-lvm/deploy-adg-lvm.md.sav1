@@ -70,20 +70,50 @@ The standby host has the database software only installed. You need do some step
 
    
 
-7. Start the listener.
+6. Configure the Listener.
 
    ```
-   [oracle@standby ~]$ lsnrctl start
+   [oracle@standby ~]$ <copy>/u01/app/oracle/product/19c/dbhome_1/bin/netca /orahome /u01/app/oracle/product/19c/dbhome_1 /instype typical /inscomp client,oraclenet,javavm,server,ano /insprtcl tcp /cfg local /authadp NO_VALUE /responseFile /u01/app/oracle/product/19c/dbhome_1/network/install/netca_typ.rsp /lisport 1521 /silent /orahnam OraDB19Home1</copy>
+   ```
+
+   The result like the following:
+
+   ```
+   Parsing command line arguments:
+       Parameter "orahome" = /u01/app/oracle/product/19c/dbhome_1
+       Parameter "instype" = typical
+       Parameter "inscomp" = client,oraclenet,javavm,server,ano
+       Parameter "insprtcl" = tcp
+       Parameter "cfg" = local
+       Parameter "authadp" = NO_VALUE
+       Parameter "responsefile" = /u01/app/oracle/product/19c/dbhome_1/network/install/netca_typ.rsp
+       Parameter "lisport" = 1521
+       Parameter "silent" = true
+       Parameter "orahnam" = OraDB19Home1
+   Done parsing command line arguments.
+   Oracle Net Services Configuration:
+   Profile configuration complete.
+   Listener is using the port provided in the command line:1521
+   Oracle Net Listener Startup:
+       Running Listener Control: 
+         /u01/app/oracle/product/19c/dbhome_1/bin/lsnrctl start LISTENER
+       Listener Control complete.
+       Listener started successfully.
+   Listener configuration complete.
+   Oracle Net Services configuration successful. The exit code is 0
+   [oracle@standby ~]$ 
+   ```
+
    
-   LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 08-JUN-2021 05:44:32
+
+7. Check the listener status.
+
+   ```
+   [oracle@standby ~]$ lsnrctl status
    
-   Copyright (c) 1991, 2020, Oracle.  All rights reserved.
+   LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 06-NOV-2020 11:46:12
    
-   Starting /u01/app/oracle/product/19c/dbhome_1/bin/tnslsnr: please wait...
-   
-   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
-   Log messages written to /u01/app/oracle/diag/tnslsnr/standby0/listener/alert/log.xml
-   Listening on: (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=standby0)(PORT=1521)))
+   Copyright (c) 1991, 2019, Oracle.  All rights reserved.
    
    Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=standby.subnet1.standbyvcn.oraclevcn.com)(PORT=1521)))
    STATUS of the LISTENER

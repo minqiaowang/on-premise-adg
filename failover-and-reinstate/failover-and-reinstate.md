@@ -195,7 +195,7 @@ Now, the primary is the back to the **ORCL** database, and the standby database 
 
 ```
 DGMGRL> <copy>connect sys/Ora_DB4U@orclstby</copy>
-Connected to "ORCL_nrt1d4"
+Connected to "ORCLSTBY"
 Connected as SYSDBA.
 DGMGRL> <copy>shutdown immediate</copy>
 Database closed.
@@ -203,7 +203,7 @@ Database dismounted.
 ORACLE instance shut down.
 Connected to an idle instance.
 DGMGRL> <copy>startup mount</copy>
-Connected to "ORCL_nrt1d4"
+Connected to "ORCLSTBY"
 ORACLE instance started.
 Database mounted.
 DGMGRL>   
