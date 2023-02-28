@@ -1,0 +1,59 @@
+# Title shown in Application Information tab.
+title: FreeTier or Cloud-Compute Instance and VCN
+# Sub Title shown in Application Information tab.
+description: Free Tier-Compute Instance and VCN
+schemaVersion: 1.1.0
+version: "20200417"
+
+# URL of Logo Icon used on Application Information tab. Logo must be 130x130 pixels.
+# (Optional)
+logoUrl: https://cloudmarketplace.oracle.com/marketplace/content?contentId=53066708
+
+# Used in Application Information tab to Hyperlink Title and Logo to the Marketplace 
+# Listing.
+# Also used to link to Listing Usage section for "View Instructions".
+# (Optional) If it is missing, Application Information uses the 
+# "marketplace-listing-id" tag for the same purpose.
+source:
+  type: marketplace
+  reference: 16132843
+
+locale: "en"
+variableGroups:
+#  - title: "# Enter the number of instances:"
+#    variables:
+#      - ${num_instances}
+  - title: "Required Variables"
+    visible: true
+    variables:
+      - ${compartment_ocid}
+      - ${ssh_public_key}
+
+  - title: "Hidden"
+    visible: false
+    variables:
+      - ${tenancy_ocid}
+      - ${region}
+      - ${instance_shape}
+    
+    
+variables:
+
+##  show_advanced:
+##    type: boolean
+##    title: "Show advanced options?"
+##    description: "Shows advanced options."
+##    visible: true
+##    default: false
+
+  compartment_ocid:
+    type: oci:identity:compartment:id
+    required: true
+    title: Compartment
+    description: Compartment where you want to create the solution resources  
+
+  ssh_public_key:
+    type: oci:core:ssh:publickey
+    required: true
+    title: "Public SSH Key"
+    description: "Choose public SSH Key to be uploaded into compute instances."
